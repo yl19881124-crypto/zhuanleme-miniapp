@@ -1,0 +1,8 @@
+<view class="container">
+  <view class="card">
+    <view class="title">首次设置</view>
+    <view class="subtle">只保存在本地，不上传。先填个大概月薪，后面可改。</view>
+    <input placeholder="输入税前月薪" type="digit" bindinput="onSalaryInput" class="input" />
+    <button class="btn-primary" bindtap="saveConfig">保存并开始打工</button>
+  </view>
+</view>

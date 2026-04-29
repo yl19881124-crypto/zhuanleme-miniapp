@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="card">
+    <view class="title">今日打工进度 <text class="accent">{{progress}}%</text></view>
+    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800"/>
+    <view class="metrics">
+      <view>今日已赚：{{todayIncome}}</view>
+      <view>每秒收入：{{perSecond}}</view>
+      <view>已工作时长：{{workedDuration}}</view>
+      <view>距离下班：{{offWorkCountdown}}</view>
+    </view>
+    <view class="subtle">当前状态：</view>
+    <status-badge status="{{status}}" />
+    <view class="roast">{{roastText}}</view>
+  </view>
+</view>
