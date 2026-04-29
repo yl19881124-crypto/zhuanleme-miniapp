@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="card">
+    <view class="title">状态记录</view>
+    <view class="subtle">给今天的自己打个标签。</view>
+    <view class="status-grid">
+      <block wx:for="{{statusList}}" wx:key="*this">
+        <view class="status-item" data-status="{{item}}" bindtap="chooseStatus">{{item}}</view>
+      </block>
+    </view>
+  </view>
+</view>

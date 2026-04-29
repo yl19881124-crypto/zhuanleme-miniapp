@@ -1,0 +1,9 @@
+<view class="container">
+  <view class="card">
+    <view class="title">今日结算</view>
+    <view>今日毛收入：{{gross}}</view>
+    <view>今日消费：{{expense}}</view>
+    <view class="accent">今日净收入：{{net}}</view>
+    <view class="subtle">默认脱敏展示，保护你的脆弱工资单。</view>
+  </view>
+</view>

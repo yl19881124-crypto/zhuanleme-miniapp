@@ -1,0 +1,9 @@
+<view class="container">
+  <view class="card">
+    <view class="title">消费折算</view>
+    <view class="subtle">这笔钱，得搬砖多久？</view>
+    <input class="input" placeholder="输入消费金额" type="digit" bindinput="inputAmount" />
+    <button class="btn-primary" bindtap="calc">开始折算</button>
+    <view class="result">约等于 <text class="accent">{{equivalentHours}}</text> 小时打工</view>
+  </view>
+</view>
