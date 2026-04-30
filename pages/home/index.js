@@ -27,7 +27,7 @@ Page({
       progress: metrics.progress,
       perSecondText: hidden ? '***' : `+¥${metrics.secondSalary.toFixed(4)}/s`,
       todayIncome: formatMoney(metrics.earnedToday, hidden),
-      workedDuration: formatDuration(metrics.workedSeconds * 1000),
+      workedDuration: formatDuration(metrics.scheduleWorkedSeconds * 1000),
       offWorkCountdown: formatCountdown(metrics.remainingSeconds),
       todayExpense: formatMoney(metrics.totalExpense, hidden),
       netIncome: formatMoney(metrics.netIncome, hidden),

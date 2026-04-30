@@ -88,8 +88,20 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
 
   const workedMilliseconds = Object.values(statusDurations).reduce((sum, v) => sum + v, 0);
   const workedSeconds = Math.floor(workedMilliseconds / 1000);
+
+  const scheduleEndAt = Math.min(effectiveNow, offAt);
+  let scheduleWorkedSeconds = 0;
+  if (scheduleEndAt > startAt) {
+    scheduleWorkedSeconds = Math.floor((scheduleEndAt - startAt) / 1000);
+    if (!config.lunchPaid) {
+      const lunchOverlapMs = Math.max(0, Math.min(scheduleEndAt, lunchEndAt) - Math.max(startAt, lunchStartAt));
+      scheduleWorkedSeconds -= Math.floor(lunchOverlapMs / 1000);
+    }
+  }
+  scheduleWorkedSeconds = Math.max(0, Math.min(effectiveWorkSeconds, scheduleWorkedSeconds));
+
   const secondSalary = configInvalid ? 0 : (dailySalary / effectiveWorkSeconds);
-  const grossIncome = workedSeconds * secondSalary;
+  const grossIncome = scheduleWorkedSeconds * secondSalary;
 
   const expenses = Array.isArray(dayState.expenses) ? dayState.expenses : [];
   const totalExpense = expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
@@ -132,8 +144,9 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     dailySalary,
     secondSalary,
     workedSeconds,
+    scheduleWorkedSeconds,
     remainingSeconds: Math.max(0, Math.floor((offAt - effectiveNow) / 1000)),
-    progress: Math.min(100, Math.round((workedSeconds / effectiveWorkSeconds) * 100)),
+    progress: Math.min(100, Math.round((scheduleWorkedSeconds / effectiveWorkSeconds) * 100)),
     effectiveWorkSeconds,
     monthlySalary,
     workdaysPerMonth,

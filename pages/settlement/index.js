@@ -15,7 +15,7 @@ Page({
       gross: formatMoney(metrics.grossIncome, hidden),
       expense: formatMoney(metrics.totalExpense, hidden),
       net: formatMoney(metrics.netIncome, hidden),
-      work: formatDuration(metrics.workedSeconds * 1000),
+      work: formatDuration(metrics.scheduleWorkedSeconds * 1000),
       fish: formatDuration(metrics.fishingSeconds * 1000),
       meeting: formatDuration(metrics.meetingSeconds * 1000),
       overtime: formatDuration(metrics.overtimeSeconds * 1000),
