@@ -1,24 +1,31 @@
 <view class="container">
   <view class="card">
     <view class="title">工资与工作规则</view>
-    <input class="input" placeholder="月薪" data-key="monthlySalary" value="{{profile.monthlySalary}}" bindinput="input" />
-    <input class="input" placeholder="每月工作日" data-key="workDaysPerMonth" value="{{profile.workDaysPerMonth}}" bindinput="input" />
-    <view class="item"><text>上班时间</text><input data-key="onWorkTime" value="{{profile.onWorkTime}}" bindinput="input"/></view>
-    <view class="item"><text>下班时间</text><input data-key="offWorkTime" value="{{profile.offWorkTime}}" bindinput="input"/></view>
-    <view class="item"><text>午休开始</text><input data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input"/></view>
-    <view class="item"><text>午休结束</text><input data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input"/></view>
-    <view class="item"><text>午休计薪</text><switch checked="{{profile.lunchPaid}}" data-key="lunchPaid" bindchange="toggleProfile"/></view>
-    <view class="item"><text>周末计薪</text><switch checked="{{profile.weekendPaid}}" data-key="weekendPaid" bindchange="toggleProfile"/></view>
+
+    <view class="field">
+      <view class="label">月薪</view>
+      <view class="salary-wrap"><text class="prefix">¥</text><input class="input salary" type="digit" data-key="monthlySalary" value="{{profile.monthlySalary}}" bindinput="input" /></view>
+    </view>
+
+    <view class="field">
+      <view class="label">每月工作日</view>
+      <input class="input" type="number" data-key="workDaysPerMonth" value="{{profile.workDaysPerMonth}}" bindinput="input" />
+    </view>
+
+    <view class="field"><view class="label">上班时间</view><input class="input" data-key="onWorkTime" value="{{profile.onWorkTime}}" bindinput="input"/></view>
+    <view class="field"><view class="label">下班时间</view><input class="input" data-key="offWorkTime" value="{{profile.offWorkTime}}" bindinput="input"/></view>
+    <view class="field"><view class="label">午休开始</view><input class="input" data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input"/></view>
+    <view class="field"><view class="label">午休结束</view><input class="input" data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input"/></view>
+    <view class="item"><text>午休是否计薪</text><switch checked="{{profile.lunchPaid}}" data-key="lunchPaid" bindchange="toggleProfile"/></view>
+    <view class="item"><text>周末是否计薪</text><switch checked="{{profile.weekendPaid}}" data-key="weekendPaid" bindchange="toggleProfile"/></view>
     <button class="btn-primary" bindtap="saveProfile">保存设置</button>
   </view>
 
   <view class="card">
     <view class="title">隐私设置</view>
-    <view class="item"><text>隐藏薪资</text><switch checked="{{privacy.hideSalary}}" data-key="hideSalary" bindchange="onPrivacyChange"/></view>
-    <view class="item"><text>隐藏今日已赚</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
-    <view class="item"><text>隐藏净收入</text><switch checked="{{privacy.hideNetIncome}}" data-key="hideNetIncome" bindchange="onPrivacyChange"/></view>
-    <view class="item"><text>分享海报脱敏</text><switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange"/></view>
-    <view class="subtle">分享内容默认不展示真实收入，避免工资被反推。</view>
+    <view class="item"><text>隐私模式：首页金额显示为 ***</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
+    <view class="item"><text>分享脱敏：海报默认不展示真实收入</text><switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange"/></view>
+    <view class="subtle">默认你自己看真实金额，分享时再脱敏，爽点和安全都保住。</view>
   </view>
 
   <view class="card">

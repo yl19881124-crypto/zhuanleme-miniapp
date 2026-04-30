@@ -1,6 +1,11 @@
 @import "../../app.wxss";
 .brand { margin-bottom: 16rpx; }
-.metrics { display:grid; grid-template-columns: 1fr 1fr; gap: 8rpx; margin: 12rpx 0; font-size: 24rpx; }
+.hero-card { padding-bottom: 20rpx; }
+.hero-head { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom: 14rpx; }
+.hero-money { font-size: 66rpx; font-weight: 800; line-height: 1.1; color:#111; margin-top: 6rpx; }
+.privacy-toggle { border: 1px solid #ddd; border-radius: 999rpx; padding: 8rpx 18rpx; font-size: 22rpx; color:#555; }
+.progress-line { margin: 8rpx 0; font-size: 24rpx; color:#666; }
+.metrics { display:grid; grid-template-columns: 1fr 1fr; gap: 12rpx; margin: 14rpx 0; font-size: 24rpx; }
 .status-grid { display:flex; flex-wrap:wrap; gap: 12rpx; margin-top: 12rpx; }
 .status-item { padding: 12rpx 18rpx; border:1px solid #ddd; border-radius: 20rpx; font-size:24rpx; }
 .status-item.active { background:#111; color:#f7c948; border-color:#111; }

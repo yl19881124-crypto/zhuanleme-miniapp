@@ -1,8 +1,39 @@
 <view class="container">
-  <view class="card"><view class="title">今日打工副本结算</view><view class="subtle">钱是赚到了一点，人也被消耗了一点。</view></view>
-  <view class="card"><view class="title">核心数据</view><view>今日毛收入：{{gross}}</view><view>今日消费：{{expense}}</view><view>今日净收入：{{net}}</view></view>
-  <view class="card"><view class="title">行为数据</view><view>今日工作时长：{{work}}</view><view>摸鱼时长：{{fish}}</view><view>开会时长：{{meeting}}</view><view>加班时长：{{overtime}}</view></view>
-  <view class="card"><view class="title">情绪与人格</view><view>摸鱼指数：{{fishIndex}}</view><view>精神损耗：{{mental}}</view><view>今日打工人格：{{persona}}</view></view>
-  <view class="card"><view class="title">今日点评</view><view class="subtle">{{roast}}</view></view>
-  <view class="card"><button class="btn-primary" bindtap="generatePoster">生成分享海报</button><button class="btn-secondary" bindtap="restartDay">重新开始明天</button></view>
+  <view class="card result-top">
+    <view class="title">今日打工副本结算</view>
+    <view class="persona">今日打工人格：{{persona}}</view>
+    <view class="subtle">今日一句话结论：{{roast}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">核心数据</view>
+    <view>今日毛收入：{{gross}}</view>
+    <view>钱包伤害：{{expense}}</view>
+    <view>今日回血：{{net}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">行为数据</view>
+    <view>今日工作时长：{{work}}</view>
+    <view>摸鱼时长：{{fish}}</view>
+    <view>开会时长：{{meeting}}</view>
+    <view>加班时长：{{overtime}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">情绪与人格</view>
+    <view>摸鱼指数：{{fishIndex}}</view>
+    <view>精神损耗：{{mental}}</view>
+    <view>今日打工人格：{{persona}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">今日点评</view>
+    <view class="subtle">{{roast}}</view>
+  </view>
+
+  <view class="card actions">
+    <button class="btn-primary" bindtap="generatePoster">生成老板可见安全版海报</button>
+    <button class="btn-secondary" bindtap="restartDay">开启明天副本</button>
+  </view>
 </view>

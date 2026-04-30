@@ -3,4 +3,6 @@
 .tab { flex:1; text-align:center; padding: 20rpx; }
 .active { background:#111; color:#f7c948; font-weight: 600; }
 .row { display:flex; justify-content:space-between; margin: 12rpx 0; }
+.weak { color:#a5a5a5; }
+.summary-line { margin-top: 14rpx; background:#fff9e8; border:1px solid #f4db8a; padding: 14rpx; border-radius: 10rpx; color:#6d5500; }
 .expense-item { padding: 12rpx 0; border-bottom: 1px solid #eee; }

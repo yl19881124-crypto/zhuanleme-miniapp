@@ -2,7 +2,7 @@ const { KEYS, get, set } = require('../../utils/storage');
 const { formatMoney } = require('../../utils/wage');
 
 Page({
-  data: { gross:'***', expense:'***', net:'***', work:'0小时', fish:'0分钟', meeting:'0分钟', overtime:'0分钟', fishIndex:0, mental:0, persona:'稳定续命型员工', roast:'今天扛住了，明天继续。' },
+  data: { gross:'0.00', expense:'0.00', net:'0.00', work:'0小时', fish:'0分钟', meeting:'0分钟', overtime:'0分钟', fishIndex:0, mental:0, persona:'稳定续命型员工', roast:'钱是赚到了一点，人也被消耗了一点。' },
   onShow() {
     const privacy = get(KEYS.PRIVACY, {});
     const profile = get(KEYS.PROFILE, { hourSalary: 0, workHoursPerDay: 8 });
@@ -15,7 +15,7 @@ Page({
     const fishIndex = Math.min(100, fishMin);
     const mental = Math.min(100, Math.round((counts('崩溃中') * 25 + overtimeMin * 0.4)));
     const persona = fishMin > 120 ? '摸鱼套利型牛马' : meetingMin > 120 ? '会议变现型选手' : expenseRaw > grossRaw * 0.5 ? '钱包漏风型打工人' : overtimeMin > 120 ? '加班献祭型战士' : '稳定续命型员工';
-    const roast = `${persona}，钱是赚到了一点，人也被消耗了一点。`;
+    const roast = '钱是赚到了一点，人也被消耗了一点。';
     this.setData({
       gross: formatMoney(grossRaw, privacy.hideTodayIncome),
       expense: formatMoney(expenseRaw, privacy.hideNetIncome),
