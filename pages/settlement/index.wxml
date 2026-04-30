@@ -1,8 +1,9 @@
 <view class="container">
   <view class="card result-top">
     <view class="title">今日打工副本结算</view>
-    <view class="persona">今日打工人格：{{persona}}</view>
+    <view class="persona">主状态：{{persona}}</view>
     <view class="subtle">今日一句话结论：{{roast}}</view>
+    <view class="subtle">今日战果：{{battleRewardText}}</view>
     <view class="persona">今日副本结果：{{result}}</view>
   </view>
 
