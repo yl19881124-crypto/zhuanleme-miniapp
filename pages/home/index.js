@@ -1,5 +1,6 @@
 const { KEYS, get, set } = require('../../utils/storage');
-const { calcSecondIncome, formatMoney } = require('../../utils/wage');
+const { formatMoney } = require('../../utils/wage');
+const { getRealtimeCoreData, formatDuration, formatCountdown } = require('../../utils/day-metrics');
 
 const STATUS_LIST = ['正常上班', '摸鱼中', '开会中', '假装忙', '崩溃中', '午休中', '加班中', '收工'];
 const CATEGORIES = ['咖啡', '外卖', '通勤', '奶茶', '购物', '其他'];
@@ -13,7 +14,7 @@ function roast(status) {
     '崩溃中': '钱在慢慢涨，人也在慢慢碎。',
     '午休中': '身体暂停，工资继续回血。',
     '加班中': '现在赚的是钱，亏的是命。',
-    '收工': '今日副本准备结算。'
+    收工: '今日副本准备结算。'
   };
   return map[status] || '工位一坐，灵魂出窍。';
 }
@@ -21,51 +22,60 @@ function roast(status) {
 Page({
   data: {
     statusList: STATUS_LIST, categories: CATEGORIES, currentStatus: '正常上班', roastText: roast('正常上班'),
-    progress: 0, todayIncome: '0.00', perSecond: '0.00', workedDuration: '00:00', offWorkCountdown: '--:--',
-    todayExpense: '0.00', netIncome: '0.00', fishDuration: '0分钟', meetingDuration: '0分钟', recentExpenses: [],
-    showExpensePopup: false, form: { amount: '', category: '咖啡', note: '' }, hide: {}
+    progress: 0, todayIncome: '0.00', perSecond: '0.0000', workedDuration: '0小时0分', offWorkCountdown: '00:00:00',
+    todayExpense: '0.00', netIncome: '0.00', fishDuration: '0小时0分', meetingDuration: '0小时0分', recentExpenses: [],
+    showExpensePopup: false, form: { amount: '', category: '咖啡', note: '' }, hide: {}, hideLabel: '👁 金额可见'
   },
-  onShow() { this.refresh(); },
-  refresh() {
-    const profile = get(KEYS.PROFILE, { hourSalary: 0, workHoursPerDay: 8 });
-    const privacy = get(KEYS.PRIVACY, { hideSalary: false, hideTodayIncome: false, hideNetIncome: false, maskOnShare: true });
-    const logs = get(KEYS.STATUS_LOGS, []);
-    const expenses = get(KEYS.EXPENSE_LOGS, []);
-    const currentStatus = logs[0]?.status || '正常上班';
-    const workedHours = Math.min(profile.workHoursPerDay, 2.5 + logs.length * 0.1);
-    const gross = workedHours * profile.hourSalary;
-    const expenseTotal = expenses.reduce((s, i) => s + Number(i.amount || 0), 0);
-    const progress = Math.round((workedHours / (profile.workHoursPerDay || 8)) * 100);
+  onShow() { this.startRealtimeRefresh(); },
+  onHide() { this.stopRealtimeRefresh(); },
+  onUnload() { this.stopRealtimeRefresh(); },
+  startRealtimeRefresh() {
+    this.stopRealtimeRefresh();
+    this.updateRealtimeData();
+    this.timer = setInterval(() => this.updateRealtimeData(), 1000);
+  },
+  stopRealtimeRefresh() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  },
+  updateRealtimeData() {
+    const privacy = get(KEYS.PRIVACY, { hideTodayIncome: false, maskOnShare: true });
+    const core = getRealtimeCoreData(Date.now());
+    const hidden = !!privacy.hideTodayIncome;
+
     this.setData({
       hide: privacy,
-      currentStatus,
-      roastText: roast(currentStatus),
-      progress,
-      perSecond: formatMoney(calcSecondIncome(profile.hourSalary || 0), privacy.hideSalary),
-      todayIncome: formatMoney(gross, privacy.hideTodayIncome),
-      workedDuration: `${Math.floor(workedHours)}小时${Math.round((workedHours % 1) * 60)}分`,
-      offWorkCountdown: `${Math.max(0, profile.workHoursPerDay - workedHours).toFixed(1)}小时`,
-      todayExpense: formatMoney(expenseTotal, privacy.hideNetIncome),
-      netIncome: formatMoney(gross - expenseTotal, privacy.hideNetIncome),
-      fishDuration: `${logs.filter((i) => i.status === '摸鱼中').length * 15}分钟`,
-      meetingDuration: `${logs.filter((i) => i.status === '开会中').length * 20}分钟`,
-      recentExpenses: expenses.slice(0, 3)
+      hideLabel: hidden ? '🙈 金额隐藏' : '👁 金额可见',
+      currentStatus: core.currentStatus,
+      roastText: roast(core.currentStatus),
+      progress: core.progress,
+      perSecond: hidden ? '***' : core.secondIncome.toFixed(4),
+      todayIncome: formatMoney(core.todayEarned, hidden),
+      workedDuration: formatDuration(core.totalWorkedMsByStatus || core.workedSeconds * 1000),
+      offWorkCountdown: formatCountdown(core.offWorkCountdownSec),
+      todayExpense: formatMoney(core.todayExpense, hidden),
+      netIncome: formatMoney(core.todayNet, hidden),
+      fishDuration: formatDuration(core.fishMs),
+      meetingDuration: formatDuration(core.meetingMs),
+      recentExpenses: core.expenses.slice(0, 3)
     });
   },
   togglePrivacy() {
     const privacy = { ...this.data.hide, hideTodayIncome: !this.data.hide.hideTodayIncome };
     this.setData({ hide: privacy });
     set(KEYS.PRIVACY, privacy);
-    this.refresh();
+    this.updateRealtimeData();
   },
   chooseStatus(e) {
     const status = e.currentTarget.dataset.status;
     const logs = get(KEYS.STATUS_LOGS, []);
-    logs.unshift({ status, time: Date.now() });
-    set(KEYS.STATUS_LOGS, logs.slice(0, 200));
+    logs.push({ status, time: Date.now() });
+    set(KEYS.STATUS_LOGS, logs.slice(-200));
     this.setData({ currentStatus: status, roastText: roast(status) });
     if (status === '收工') wx.switchTab({ url: '/pages/settlement/index' });
-    this.refresh();
+    this.updateRealtimeData();
   },
   openExpensePopup() { this.setData({ showExpensePopup: true }); },
   closeExpensePopup() { this.setData({ showExpensePopup: false }); },
@@ -73,16 +83,16 @@ Page({
   onNote(e) { this.setData({ 'form.note': e.detail.value }); },
   onCategory(e) { this.setData({ 'form.category': CATEGORIES[e.detail.value] }); },
   addExpense() {
-    const profile = get(KEYS.PROFILE, { hourSalary: 0 });
+    const core = getRealtimeCoreData(Date.now());
     const amount = Number(this.data.form.amount || 0);
     if (!amount) return wx.showToast({ title: '请输入金额', icon: 'none' });
-    const grindMinutes = profile.hourSalary ? Math.round((amount / profile.hourSalary) * 60) : 0;
+    const grindMinutes = core.secondIncome ? Math.round(amount / core.secondIncome / 60) : 0;
     const logs = get(KEYS.EXPENSE_LOGS, []);
     logs.unshift({ ...this.data.form, amount, grindMinutes, time: Date.now() });
     set(KEYS.EXPENSE_LOGS, logs.slice(0, 200));
     wx.showToast({ title: `约白干${grindMinutes}分钟`, icon: 'none' });
     this.setData({ showExpensePopup: false, form: { amount: '', category: '咖啡', note: '' } });
-    this.refresh();
+    this.updateRealtimeData();
   },
   goSettlement() { wx.switchTab({ url: '/pages/settlement/index' }); }
 });

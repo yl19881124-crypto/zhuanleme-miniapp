@@ -23,7 +23,7 @@
 
   <view class="card">
     <view class="title">隐私设置</view>
-    <view class="item"><text>隐私模式：首页金额显示为 ***</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
+    <view class="item"><text>首页隐私模式：控制自己看首页时是否隐藏金额</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
     <view class="item"><text>分享脱敏：海报默认不展示真实收入</text><switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange"/></view>
     <view class="subtle">默认你自己看真实金额，分享时再脱敏，爽点和安全都保住。</view>
   </view>
