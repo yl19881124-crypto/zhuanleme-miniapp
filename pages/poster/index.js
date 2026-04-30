@@ -169,8 +169,5 @@ Page({
   onShareAppMessage() {
     return { title: '我今天的牛马进度条已更新', path: '/pages/home/index', imageUrl: this.data.posterImagePath || undefined };
   },
-  onDebugBgError() {
-    console.error('poster bg not found or path invalid');
-  },
   goBack() { wx.navigateBack({ delta: 1 }); }
 });
