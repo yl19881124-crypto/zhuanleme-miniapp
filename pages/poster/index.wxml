@@ -1,6 +1,7 @@
 <view class="container">
   <view class="poster-wrap">
-    <canvas type="2d" id="posterCanvas" canvas-id="posterCanvas" class="poster-canvas"></canvas>
+    <image wx:if="{{posterImage}}" class="poster-preview" src="{{posterImage}}" mode="widthFix"/>
+    <canvas type="2d" id="posterCanvas" canvas-id="posterCanvas" class="poster-canvas-hidden"></canvas>
   </view>
 
   <view class="actions">
