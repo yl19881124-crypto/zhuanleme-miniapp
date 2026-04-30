@@ -14,7 +14,7 @@ function sanitizeMoneyText(text = '') {
 }
 
 Page({
-  data: { metrics: null, posterImage: '' },
+  data: { metrics: null, posterImagePath: '', posterReady: false, loading: false },
   onLoad() { this.loadMetrics(); },
   onReady() { this.drawPoster(); },
   loadMetrics() {
@@ -34,55 +34,88 @@ Page({
   drawPoster() {
     const { metrics } = this.data;
     if (!metrics) return;
-    wx.createSelectorQuery().select('#posterCanvas').fields({ node: true, size: true }).exec((res) => {
+    this.setData({ loading: true, posterReady: false });
+    const query = wx.createSelectorQuery().in(this);
+    query.select('#posterCanvas').fields({ node: true, size: true }).exec((res) => {
+      if (!res || !res[0] || !res[0].node) {
+        this.setData({ loading: false });
+        wx.showToast({ title: '海报生成失败，请稍后重试', icon: 'none' });
+        return;
+      }
       const canvas = res[0].node;
+      console.log('[poster] canvas node', canvas);
       const ctx = canvas.getContext('2d');
-      const dpr = wx.getWindowInfo().pixelRatio;
-      const width = 750;
-      const height = 1100;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      const dpr = wx.getWindowInfo ? wx.getWindowInfo().pixelRatio : wx.getSystemInfoSync().pixelRatio;
+      const posterWidth = 750;
+      const posterHeight = 1100;
+      canvas.width = posterWidth * dpr;
+      canvas.height = posterHeight * dpr;
       ctx.scale(dpr, dpr);
+
+      let finished = false;
+      const timeoutTimer = setTimeout(() => {
+        if (finished) return;
+        finished = true;
+        this.setData({ loading: false });
+        wx.showToast({ title: '海报生成失败，请检查底图路径', icon: 'none' });
+      }, 6000);
 
       const bg = canvas.createImage();
       bg.onload = () => {
-        ctx.drawImage(bg, 0, 0, width, height);
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutTimer);
+        console.log('[poster] bg loaded');
+        ctx.drawImage(bg, 0, 0, posterWidth, posterHeight);
         ctx.fillStyle = '#111';
         ctx.font = '800 40px sans-serif';
-        ctx.fillText('赚了么', 90, 110);
+        ctx.fillText('赚了么', 70, 90);
+
+        ctx.fillStyle = '#111';
+        ctx.font = '600 26px sans-serif';
+        ctx.fillText('老板可见版', 535, 90);
 
         ctx.fillStyle = '#333';
         ctx.font = '28px sans-serif';
         ctx.fillText('今日打工状态', 90, 190);
         ctx.fillStyle = '#111';
-        this.wrapTextLines(ctx, metrics.mainStatusText, 90, 258, 570, 68, 2, '900 64px sans-serif');
+        this.wrapTextLines(ctx, metrics.mainStatusText, 90, 270, 570, 68, 2, '900 64px sans-serif');
 
         ctx.fillStyle = '#555';
-        this.wrapTextLines(ctx, metrics.conclusion, 90, 352, 570, 42, 2, '28px sans-serif');
+        this.wrapTextLines(ctx, metrics.conclusion, 90, 365, 570, 42, 2, '28px sans-serif');
 
         ctx.fillStyle = '#7A5A00';
         ctx.font = '26px sans-serif';
-        ctx.fillText('今日战果', 118, 438);
+        ctx.fillText('今日战果', 90, 490);
         ctx.fillStyle = '#111';
-        this.wrapTextLines(ctx, metrics.battleRewardText, 118, 500, 514, 44, 2, '800 38px sans-serif');
+        this.wrapTextLines(ctx, metrics.battleRewardText, 90, 560, 570, 44, 2, '800 38px sans-serif');
 
-        this.drawMetricText(ctx, 118, 662, '当前状态', metrics.currentStatusText);
-        this.drawMetricText(ctx, 118, 802, '摸鱼指数', metrics.fishingIndex);
-        this.drawMetricText(ctx, 406, 802, '钱包伤害', metrics.walletDamageText || '***');
+        this.drawMetricText(ctx, 90, 720, '当前状态', metrics.currentStatusText);
+        this.drawMetricText(ctx, 380, 720, '摸鱼指数', metrics.fishingIndex);
+        this.drawMetricText(ctx, 90, 850, '钱包伤害', metrics.walletDamageText || '***');
 
         ctx.fillStyle = '#222';
         ctx.font = '600 26px sans-serif';
-        ctx.fillText('今天打工回血了吗？', 90, 950);
+        ctx.fillText('今天打工回血了吗？', 70, 990);
         ctx.fillStyle = '#777';
         ctx.font = '22px sans-serif';
-        ctx.fillText(metrics.footerGuide, 90, 988);
+        ctx.fillText(metrics.footerGuide, 70, 1035);
 
         ctx.fillStyle = '#999';
         ctx.font = '20px sans-serif';
-        ctx.fillText('小程序码', 560, 998);
+        ctx.fillText('小程序码', 600, 1010);
 
-        this.updatePreviewImage();
+        this.updatePreviewImage(canvas);
       };
+      bg.onerror = (err) => {
+        if (finished) return;
+        finished = true;
+        clearTimeout(timeoutTimer);
+        console.error('[poster bg load error]', err);
+        this.setData({ loading: false });
+        wx.showToast({ title: '海报底图加载失败', icon: 'none' });
+      };
+      console.log('[poster] bg path', '/assets/poster/poster-bg.png');
       bg.src = '/assets/poster/poster-bg.png';
     });
   },
@@ -107,27 +140,37 @@ Page({
     if (line) lines.push(line);
     lines.slice(0, maxLines).forEach((item, idx) => ctx.fillText(item, x, y + (idx * lineHeight)));
   },
-  updatePreviewImage() {
+  updatePreviewImage(canvas) {
     wx.canvasToTempFilePath({
-      canvasId: 'posterCanvas',
-      success: (res) => this.setData({ posterImage: res.tempFilePath })
+      canvas,
+      destWidth: 1500,
+      destHeight: 2200,
+      success: (res) => {
+        console.log('[poster] export success', res.tempFilePath);
+        this.setData({ posterImagePath: res.tempFilePath, posterReady: true, loading: false });
+      },
+      fail: (err) => {
+        console.error('[canvasToTempFilePath fail]', err);
+        this.setData({ loading: false });
+      }
     }, this);
   },
   savePoster() {
-    wx.canvasToTempFilePath({
-      canvasId: 'posterCanvas',
-      success: (res) => {
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath,
-          success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }),
-          fail: () => wx.showToast({ title: '保存失败，请重试', icon: 'none' })
-        });
-      },
-      fail: () => wx.showToast({ title: '海报生成失败', icon: 'none' })
-    }, this);
+    if (!this.data.posterImagePath) {
+      wx.showToast({ title: '海报还没生成，请稍后再试', icon: 'none' });
+      return;
+    }
+    wx.saveImageToPhotosAlbum({
+      filePath: this.data.posterImagePath,
+      success: () => wx.showToast({ title: '已保存到相册', icon: 'success' }),
+      fail: () => wx.showToast({ title: '保存失败，请重试', icon: 'none' })
+    });
   },
   onShareAppMessage() {
-    return { title: '我今天的牛马进度条已更新', path: '/pages/home/index', imageUrl: this.data.posterImage || undefined };
+    return { title: '我今天的牛马进度条已更新', path: '/pages/home/index', imageUrl: this.data.posterImagePath || undefined };
+  },
+  onDebugBgError() {
+    console.error('poster bg not found or path invalid');
   },
   goBack() { wx.navigateBack({ delta: 1 }); }
 });

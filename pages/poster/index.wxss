@@ -1,7 +1,8 @@
 .container { padding: 24rpx; background: #f5f5f5; min-height: 100vh; box-sizing: border-box; }
 .poster-wrap { width: 640rpx; margin: 24rpx auto 0; background: #FFFDF8; border-radius: 32rpx; box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.06); overflow: hidden; }
 .poster-preview { width: 640rpx; display: block; }
-.poster-canvas-hidden { position: fixed; left: -9999px; top: -9999px; width: 750px; height: 1100px; }
+.poster-loading { width: 640rpx; height: 420rpx; display: flex; align-items: center; justify-content: center; color: #666; font-size: 30rpx; }
+.poster-canvas { width: 690rpx; height: 1012rpx; display: block; margin: 24rpx auto; position: fixed; left: -9999px; top: -9999px; }
 .actions { margin-top: 24rpx; display: flex; flex-direction: column; gap: 18rpx; align-items: center; }
 .btn { width: 440rpx; height: 84rpx; line-height: 84rpx; border-radius: 18rpx; font-size: 30rpx; }
 .btn-primary { background: #111; color: #F2D34F; }
