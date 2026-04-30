@@ -1,7 +1,7 @@
 <view class="container">
   <view class="card result-top">
     <view class="title">今日打工副本结算</view>
-    <view class="persona">主状态：{{persona}}</view>
+    <view class="persona">今日打工状态：{{persona}}</view>
     <view class="subtle">今日一句话结论：{{roast}}</view>
     <view class="subtle">今日战果：{{battleRewardText}}</view>
     <view class="persona">今日副本结果：{{result}}</view>
@@ -23,10 +23,10 @@
   </view>
 
   <view class="card">
-    <view class="title">情绪与人格</view>
+    <view class="title">情绪概览</view>
     <view>摸鱼指数：{{fishIndex}}</view>
     <view>精神损耗：{{mental}}</view>
-    <view>今日打工人格：{{persona}}</view>
+    <view>当前状态文案：{{persona}}</view>
   </view>
 
   <view class="card">
@@ -35,7 +35,7 @@
   </view>
 
   <view class="card actions">
-    <button class="btn-primary" bindtap="generatePoster">生成老板可见安全版海报</button>
+    <button class="btn-primary" bindtap="generatePoster">生成老板可见版海报</button>
     <button class="btn-secondary" bindtap="restartDay">开启明天副本</button>
   </view>
 </view>
