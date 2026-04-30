@@ -1,15 +1,59 @@
 <view class="container">
+  <view class="card brand">
+    <view class="title">赚了么</view>
+    <view class="subtle">今天打工回血了吗？</view>
+  </view>
+
   <view class="card">
     <view class="title">今日打工进度 <text class="accent">{{progress}}%</text></view>
-    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800"/>
+    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800" />
     <view class="metrics">
-      <view>今日已赚：{{todayIncome}}</view>
-      <view>每秒收入：{{perSecond}}</view>
-      <view>已工作时长：{{workedDuration}}</view>
-      <view>距离下班：{{offWorkCountdown}}</view>
+      <view>今日已赚：{{todayIncome}}</view><view>每秒收入：{{perSecond}}</view>
+      <view>已工作时长：{{workedDuration}}</view><view>距离下班：{{offWorkCountdown}}</view>
     </view>
-    <view class="subtle">当前状态：</view>
-    <status-badge status="{{status}}" />
+    <view>当前状态：{{currentStatus}}</view>
     <view class="roast">{{roastText}}</view>
+  </view>
+
+  <view class="card">
+    <view class="title">现在在干嘛？</view>
+    <view class="status-grid">
+      <view wx:for="{{statusList}}" wx:key="*this" class="status-item {{currentStatus===item?'active':''}}" data-status="{{item}}" bindtap="chooseStatus">{{item}}</view>
+    </view>
+  </view>
+
+  <view class="card quicks">
+    <button class="btn-primary" bindtap="openExpensePopup">记一笔消费</button>
+    <button class="btn-secondary" bindtap="goSettlement">今日结算</button>
+  </view>
+
+  <view class="card overview">
+    <view class="title">今日概览</view>
+    <view class="mini-grid">
+      <view>今日消费
+<text>{{todayExpense}}</text></view>
+      <view>今日净收入
+<text>{{netIncome}}</text></view>
+      <view>摸鱼时长
+<text>{{fishDuration}}</text></view>
+      <view>开会时长
+<text>{{meetingDuration}}</text></view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="title">最近消费记录</view>
+    <view wx:if="{{!recentExpenses.length}}" class="subtle">今天还没花钱，钱包暂时安全。</view>
+    <view wx:for="{{recentExpenses}}" wx:key="time" class="expense-row">{{item.category}} · ¥{{item.amount}}</view>
+  </view>
+
+  <view wx:if="{{showExpensePopup}}" class="popup-mask" bindtap="closeExpensePopup">
+    <view class="popup" catchtap="noop">
+      <view class="title">记一笔消费</view>
+      <input class="input" placeholder="金额" type="digit" bindinput="onAmount" value="{{form.amount}}" />
+      <picker mode="selector" range="{{categories}}" bindchange="onCategory"><view class="picker">分类：{{form.category}}</view></picker>
+      <input class="input" placeholder="备注（可选）" bindinput="onNote" value="{{form.note}}" />
+      <button class="btn-primary" bindtap="addExpense">确认记录</button>
+    </view>
   </view>
 </view>
