@@ -27,6 +27,45 @@ function calcDurationMs(startAt, endAt) {
   return Math.max(0, toTs(endAt) - toTs(startAt));
 }
 
+function intersectInterval(base, clip) {
+  const start = Math.max(base.start, clip.start);
+  const end = Math.min(base.end, clip.end);
+  if (end <= start) return null;
+  return { start, end };
+}
+
+function subtractCoveredFromInterval(interval, covered) {
+  if (!covered.length) return [interval];
+  const sorted = covered
+    .map((item) => ({ start: item.start, end: item.end }))
+    .sort((a, b) => a.start - b.start);
+  const merged = [];
+  sorted.forEach((item) => {
+    if (!merged.length) {
+      merged.push(item);
+      return;
+    }
+    const last = merged[merged.length - 1];
+    if (item.start <= last.end) {
+      last.end = Math.max(last.end, item.end);
+    } else {
+      merged.push(item);
+    }
+  });
+
+  const blanks = [];
+  let cursor = interval.start;
+  merged.forEach((item) => {
+    if (item.end <= cursor) return;
+    if (item.start > cursor) {
+      blanks.push({ start: cursor, end: Math.min(item.start, interval.end) });
+    }
+    cursor = Math.max(cursor, item.end);
+  });
+  if (cursor < interval.end) blanks.push({ start: cursor, end: interval.end });
+  return blanks.filter((seg) => seg.end > seg.start);
+}
+
 function formatDuration(ms = 0) {
   const totalMinutes = Math.floor(ms / 60000);
   const h = Math.floor(totalMinutes / 60);
@@ -68,26 +107,8 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
   const settledAt = dayState.settledAt ? Number(dayState.settledAt) : null;
   const effectiveNow = settledAt || tsNow;
 
-  const segments = Array.isArray(dayState.statusSegments) ? dayState.statusSegments.slice() : [];
   const statusDurations = {};
   ALL_STATUS.forEach((s) => { statusDurations[s] = 0; });
-
-  segments.forEach((seg) => {
-    if (!seg || !seg.status) return;
-    const endAt = seg.endAt || effectiveNow;
-    const duration = calcDurationMs(seg.startAt, Math.min(endAt, effectiveNow));
-    if (statusDurations[seg.status] !== undefined) statusDurations[seg.status] += duration;
-  });
-
-  const fallbackCurrent = effectiveNow >= startAt ? '正常上班' : '';
-  const currentStatus = dayState.currentStatus || fallbackCurrent;
-  const currentStatusStartAt = dayState.currentStatusStartAt || (currentStatus ? startAt : 0);
-  if (currentStatus && statusDurations[currentStatus] !== undefined) {
-    statusDurations[currentStatus] += calcDurationMs(currentStatusStartAt, effectiveNow);
-  }
-
-  const workedMilliseconds = Object.values(statusDurations).reduce((sum, v) => sum + v, 0);
-  const workedSeconds = Math.floor(workedMilliseconds / 1000);
 
   const scheduleEndAt = Math.min(effectiveNow, offAt);
   let scheduleWorkedSeconds = 0;
@@ -99,6 +120,53 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     }
   }
   scheduleWorkedSeconds = Math.max(0, Math.min(effectiveWorkSeconds, scheduleWorkedSeconds));
+
+  const workIntervals = [];
+  if (config.lunchPaid) {
+    if (scheduleEndAt > startAt) workIntervals.push({ start: startAt, end: scheduleEndAt });
+  } else {
+    const beforeLunchEnd = Math.min(scheduleEndAt, lunchStartAt);
+    if (beforeLunchEnd > startAt) workIntervals.push({ start: startAt, end: beforeLunchEnd });
+    const afterLunchStart = Math.max(startAt, lunchEndAt);
+    if (scheduleEndAt > afterLunchStart) workIntervals.push({ start: afterLunchStart, end: scheduleEndAt });
+  }
+
+  const segments = Array.isArray(dayState.statusSegments) ? dayState.statusSegments.slice() : [];
+  const statusIntervals = [];
+  segments.forEach((seg) => {
+    if (!seg || !seg.status || statusDurations[seg.status] === undefined) return;
+    const segStart = Number(seg.startAt || 0);
+    const segEnd = Number(seg.endAt || effectiveNow);
+    if (!Number.isFinite(segStart) || !Number.isFinite(segEnd) || segEnd <= segStart) return;
+    statusIntervals.push({ status: seg.status, start: segStart, end: Math.min(segEnd, effectiveNow) });
+  });
+
+  const fallbackCurrent = effectiveNow >= startAt ? '正常上班' : '';
+  const currentStatus = dayState.currentStatus || fallbackCurrent;
+  const currentStatusStartAt = dayState.currentStatusStartAt || (currentStatus ? startAt : 0);
+  if (currentStatus && statusDurations[currentStatus] !== undefined) {
+    const curStart = Number(currentStatusStartAt || 0);
+    if (Number.isFinite(curStart) && effectiveNow > curStart) {
+      statusIntervals.push({ status: currentStatus, start: curStart, end: effectiveNow });
+    }
+  }
+
+  workIntervals.forEach((workInterval) => {
+    const covered = [];
+    statusIntervals.forEach((statusInterval) => {
+      const overlap = intersectInterval(workInterval, statusInterval);
+      if (!overlap) return;
+      statusDurations[statusInterval.status] += overlap.end - overlap.start;
+      covered.push(overlap);
+    });
+    const uncovered = subtractCoveredFromInterval(workInterval, covered);
+    uncovered.forEach((gap) => {
+      statusDurations['正常上班'] += gap.end - gap.start;
+    });
+  });
+
+  const workedMilliseconds = Object.values(statusDurations).reduce((sum, v) => sum + v, 0);
+  const workedSeconds = Math.floor(workedMilliseconds / 1000);
 
   const secondSalary = configInvalid ? 0 : (dailySalary / effectiveWorkSeconds);
   const grossIncome = scheduleWorkedSeconds * secondSalary;
