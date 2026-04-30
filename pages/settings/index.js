@@ -1,21 +1,32 @@
 const { KEYS, get, set } = require('../../utils/storage');
+const { getConfig, saveConfig } = require('../../utils/day-store');
 
 const defaultPrivacy = { hideSalary: false, hideTodayIncome: false, hideNetIncome: false, maskOnShare: true };
 
 Page({
   data: {
-    profile: { monthlySalary: '', workDaysPerMonth: 22, onWorkTime: '09:00', offWorkTime: '18:00', lunchStart: '12:00', lunchEnd: '13:00', lunchPaid: false, weekendPaid: false },
+    profile: { monthlySalary: '', workdaysPerMonth: 22, startTime: '09:30', endTime: '19:00', lunchStart: '12:00', lunchEnd: '13:00', lunchPaid: false, weekendPaid: false },
     privacy: defaultPrivacy
   },
-  onShow() { this.setData({ profile: { ...this.data.profile, ...get(KEYS.PROFILE, {}) }, privacy: get(KEYS.PRIVACY, defaultPrivacy) }); },
+  onShow() {
+    const config = getConfig();
+    this.setData({ profile: { ...this.data.profile, ...config }, privacy: get(KEYS.PRIVACY, defaultPrivacy) });
+  },
   input(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
   toggleProfile(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
   saveProfile() {
     const p = this.data.profile;
-    const monthlySalary = Number(p.monthlySalary || 0);
-    const workDaysPerMonth = Math.max(1, parseInt(p.workDaysPerMonth, 10) || 22);
-    const workHoursPerDay = (Number(p.offWorkTime.split(':')[0]) - Number(p.onWorkTime.split(':')[0])) - 1;
-    set(KEYS.PROFILE, { ...p, monthlySalary, workDaysPerMonth, workHoursPerDay, hourSalary: monthlySalary / workDaysPerMonth / (workHoursPerDay || 8) });
+    const config = {
+      monthlySalary: Number(p.monthlySalary || 0),
+      workdaysPerMonth: Math.max(1, parseInt(p.workdaysPerMonth, 10) || 22),
+      startTime: p.startTime || '09:30',
+      endTime: p.endTime || '19:00',
+      lunchStart: p.lunchStart || '12:00',
+      lunchEnd: p.lunchEnd || '13:00',
+      lunchPaid: Boolean(p.lunchPaid),
+      weekendPaid: Boolean(p.weekendPaid)
+    };
+    saveConfig(config);
     wx.showToast({ title: '设置已保存', icon: 'success' });
   },
   onPrivacyChange(e) {

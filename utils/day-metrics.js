@@ -16,7 +16,15 @@ function parseTimeToDate(dateKey, hhmm) {
 }
 
 function calcDurationMs(startAt, endAt) {
-  return Math.max(0, Number(endAt || 0) - Number(startAt || 0));
+  const toTs = (v) => {
+    if (typeof v === 'string' && Number.isNaN(Number(v))) {
+      const parsed = Date.parse(v);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    const n = Number(v || 0);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return Math.max(0, toTs(endAt) - toTs(startAt));
 }
 
 function formatDuration(ms = 0) {
@@ -37,23 +45,25 @@ function formatCountdown(seconds = 0) {
 function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = Date.now() } = {}) {
   const tsNow = Number(now);
   const dateKey = toDateKey(tsNow);
-  const onWorkTime = config.onWorkTime || '09:00';
-  const offWorkTime = config.offWorkTime || '18:00';
+  const startTime = config.startTime || config.onWorkTime || '09:30';
+  const endTime = config.endTime || config.offWorkTime || '19:00';
   const lunchStart = config.lunchStart || '12:00';
   const lunchEnd = config.lunchEnd || '13:00';
-  const workDaysPerMonth = Math.max(1, Number(config.workDaysPerMonth || 22));
-  const dailySalary = Number(config.monthlySalary || 0) / workDaysPerMonth;
+  const monthlySalary = Number(config.monthlySalary ?? config.monthSalary ?? config.monthlyIncome ?? config.salary ?? 0);
+  const workdaysPerMonth = Math.max(1, Number(config.workdaysPerMonth ?? config.workDaysPerMonth ?? config.workdays ?? config.workDays ?? config.workdayCount ?? 22));
+  const configInvalid = !(monthlySalary > 0 && workdaysPerMonth > 0 && startTime && endTime);
+  const dailySalary = monthlySalary / workdaysPerMonth;
 
-  const startAt = parseTimeToDate(dateKey, onWorkTime);
-  const offAt = parseTimeToDate(dateKey, offWorkTime);
+  const startAt = parseTimeToDate(dateKey, startTime);
+  const offAt = parseTimeToDate(dateKey, endTime);
   const lunchStartAt = parseTimeToDate(dateKey, lunchStart);
   const lunchEndAt = parseTimeToDate(dateKey, lunchEnd);
 
-  let planSeconds = Math.max(0, Math.floor((offAt - startAt) / 1000));
+  let effectiveWorkSeconds = Math.max(0, Math.floor((offAt - startAt) / 1000));
   if (!config.lunchPaid) {
-    planSeconds -= Math.max(0, Math.floor((Math.min(offAt, lunchEndAt) - Math.max(startAt, lunchStartAt)) / 1000));
+    effectiveWorkSeconds -= Math.max(0, Math.floor((Math.min(offAt, lunchEndAt) - Math.max(startAt, lunchStartAt)) / 1000));
   }
-  planSeconds = Math.max(1, planSeconds);
+  effectiveWorkSeconds = Math.max(1, effectiveWorkSeconds);
 
   const settledAt = dayState.settledAt ? Number(dayState.settledAt) : null;
   const effectiveNow = settledAt || tsNow;
@@ -71,14 +81,14 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
 
   const fallbackCurrent = effectiveNow >= startAt ? '正常上班' : '';
   const currentStatus = dayState.currentStatus || fallbackCurrent;
-  const currentStatusStartAt = Number(dayState.currentStatusStartAt || (currentStatus ? startAt : 0));
+  const currentStatusStartAt = dayState.currentStatusStartAt || (currentStatus ? startAt : 0);
   if (currentStatus && statusDurations[currentStatus] !== undefined) {
     statusDurations[currentStatus] += calcDurationMs(currentStatusStartAt, effectiveNow);
   }
 
   const workedMilliseconds = Object.values(statusDurations).reduce((sum, v) => sum + v, 0);
   const workedSeconds = Math.floor(workedMilliseconds / 1000);
-  const secondSalary = dailySalary / planSeconds;
+  const secondSalary = configInvalid ? 0 : (dailySalary / effectiveWorkSeconds);
   const grossIncome = workedSeconds * secondSalary;
 
   const expenses = Array.isArray(dayState.expenses) ? dayState.expenses : [];
@@ -102,6 +112,16 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     ? '今天属于倒贴上班，建议明天控制钱包冲动。'
     : '钱是赚到了一点，人也被消耗了一点。';
 
+  console.log('[metrics salary]', {
+    monthlySalary,
+    workdaysPerMonth,
+    dailySalary,
+    effectiveWorkSeconds,
+    secondSalary,
+    workedSeconds,
+    earnedToday: grossIncome
+  });
+
   return {
     dateKey,
     currentStatus,
@@ -113,7 +133,12 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     secondSalary,
     workedSeconds,
     remainingSeconds: Math.max(0, Math.floor((offAt - effectiveNow) / 1000)),
-    progress: Math.min(100, Math.round((workedSeconds / planSeconds) * 100)),
+    progress: Math.min(100, Math.round((workedSeconds / effectiveWorkSeconds) * 100)),
+    effectiveWorkSeconds,
+    monthlySalary,
+    workdaysPerMonth,
+    configInvalid,
+    configInvalidMessage: configInvalid ? '请先设置月薪和工作时间' : '',
     statusDurations,
     fishingSeconds,
     meetingSeconds,
