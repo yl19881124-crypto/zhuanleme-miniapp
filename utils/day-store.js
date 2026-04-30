@@ -57,6 +57,20 @@ function getConfig() {
 function saveConfig(config) {
   const normalized = normalizeConfig(config);
   setStorage(STORAGE_KEYS.CONFIG, normalized);
+
+  const now = Date.now();
+  const dateKey = toDateKey(now);
+  const today = getTodayState(now);
+  const hasManualSegments = Array.isArray(today.statusSegments) && today.statusSegments.length > 0;
+
+  if (!hasManualSegments) {
+    const startAt = new Date(`${dateKey}T00:00:00`);
+    const [h, m] = String(normalized.startTime || '09:30').split(':').map((v) => Number(v) || 0);
+    startAt.setHours(h, m, 0, 0);
+    if (now >= startAt.getTime()) {
+      saveTodayState({ ...today, currentStatus: '正常上班', currentStatusStartAt: startAt.getTime() }, now);
+    }
+  }
 }
 
 function getPrivacy() { return getStorage(STORAGE_KEYS.PRIVACY, { hideTodayIncome: false, maskOnShare: true }); }
@@ -69,7 +83,21 @@ function getTodayState(now = Date.now()) {
   const dateKey = toDateKey(now);
   const defaultState = { dateKey, currentStatus: '', currentStatusStartAt: 0, statusSegments: [], expenses: [], settledAt: null };
   const state = getStorage(dayKey(dateKey), defaultState) || defaultState;
-  return { ...defaultState, ...state, dateKey };
+  const merged = { ...defaultState, ...state, dateKey };
+
+  if (!merged.currentStatus && (!Array.isArray(merged.statusSegments) || merged.statusSegments.length === 0)) {
+    const config = getConfig();
+    const startAt = new Date(`${dateKey}T00:00:00`);
+    const [h, m] = String(config.startTime || '09:30').split(':').map((v) => Number(v) || 0);
+    startAt.setHours(h, m, 0, 0);
+    if (Number(now) >= startAt.getTime()) {
+      merged.currentStatus = '正常上班';
+      merged.currentStatusStartAt = startAt.getTime();
+      saveTodayState(merged, now);
+    }
+  }
+
+  return merged;
 }
 
 function saveTodayState(dayState, now = Date.now()) {
