@@ -6,7 +6,8 @@
     "pages/settlement/index",
     "pages/settings/index",
     "pages/status/index",
-    "pages/expense/index"
+    "pages/expense/index",
+    "pages/poster/index"
   ],
   "window": {
     "navigationBarTitleText": "牛马进度条",
@@ -21,10 +22,22 @@
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
-      { "pagePath": "pages/home/index", "text": "首页" },
-      { "pagePath": "pages/records/index", "text": "记录" },
-      { "pagePath": "pages/settlement/index", "text": "结算" },
-      { "pagePath": "pages/settings/index", "text": "我的" }
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/records/index",
+        "text": "记录"
+      },
+      {
+        "pagePath": "pages/settlement/index",
+        "text": "结算"
+      },
+      {
+        "pagePath": "pages/settings/index",
+        "text": "我的"
+      }
     ]
   },
   "style": "v2",
