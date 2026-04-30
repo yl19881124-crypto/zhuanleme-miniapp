@@ -1,14 +1,14 @@
 const ALL_STATUS = ['正常上班', '摸鱼中', '开会中', '假装忙', '崩溃中', '午休中', '加班中'];
 
 const MAIN_STATUS_POOL = {
-  opening: ['刚刚开工中', '开局回血中', '今日副本启动中', '工位加载中'],
-  stable: ['稳定续命中', '正常营业中', '平稳打工中', '稳定回血中', '安静搬砖中', '工位待机中'],
-  fishing: ['带薪摸鱼中', '工资套利中', '表面在线中', '假装很忙中', '灵魂离岗中', '身在工位心在远方中'],
-  meeting: ['会议包围中', '被会议消耗中', '认真参会表演中', '会议变现中', '一边听一边飘中'],
-  pretending: ['假装很忙中', '表面生产中', '工位待机中', '看起来很努力中', '忙碌表演中', '效率伪装中'],
-  tired: ['低电量续航中', '靠意志上班中', '人还在岗中', '机械运转中', '强撑在线中', '下班执念中'],
-  breakdown: ['情绪稳定崩溃中', '一边上班一边碎中', '表面冷静中', '精神重启中', '需求追杀中', '临界续命中'],
-  overtime: ['加班献祭中', '下班遥遥无期中', '夜间搬砖中', '额外出卖时间中', '今日份延长营业中']
+  opening: ['刚刚开工中', '开局回血中', '工位加载中', '副本启动中'],
+  stable: ['稳定续命中', '正常营业中', '平稳搬砖中', '稳定回血中', '工位待机中'],
+  fishing: ['带薪摸鱼中', '工资套利中', '灵魂离岗中', '精准划水中', '表面在线中'],
+  meeting: ['会议求生中', '会议漂流中', '带薪参会中', '会议包围中', '产出待定中'],
+  pretending: ['表面在线中', '精准划水中', '工位待机中', '正常营业中', '平稳搬砖中'],
+  tired: ['低电量中', '强撑在线中', '靠意志中', '机械运转中', '下班倒计中'],
+  breakdown: ['精神重启中', '表面冷静中', '临界续命中', '一边碎中', '需求追杀中'],
+  overtime: ['加班献祭中', '延长营业中', '夜间搬砖中', '下班无期中', '额外续命中']
 };
 
 const COMMENT_POOL = [
@@ -42,10 +42,6 @@ const TODAY_HARVEST_POOL = [
   { min: 1000, max: Infinity, lines: ['演唱会，冲！', 'Live 门票有戏了', '周末快乐基金拉满', '大件心愿开始靠近', '今天是真赚出点名堂了', '报复性消费底气已上线', '快乐预算明显膨胀中', '这班开始有点香了'] }
 ];
 
-function pickRandom(list = [], fallback = '') {
-  if (!Array.isArray(list) || !list.length) return fallback;
-  return list[Math.floor(Math.random() * list.length)];
-}
 function hashSeed(input = '') {
   const text = String(input || '');
   let hash = 2166136261;
@@ -297,10 +293,10 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
   const earnedLevel = getEarnedLevel(grossIncome);
   const seedBase = `${dateKey}:${mainStatus.category}:${earnedLevel}`;
   const personality = seededPick(MAIN_STATUS_POOL[mainStatus.category], seedBase, '稳定续命中');
-  const conclusion = pickRandom(COMMENT_POOL, '钱是赚到了一点，人也被消耗了一点。');
-  const dungeonResult = seededPick(DUNGEON_RESULT_POOL, `${dateKey}:dungeon:${earnedLevel}`, '勉强通关');
+  const conclusion = seededPick(COMMENT_POOL, `${seedBase}:conclusion`, '钱是赚到了一点，人也被消耗了一点。');
+  const dungeonResult = seededPick(DUNGEON_RESULT_POOL, `${seedBase}:dungeon`, '勉强通关');
   const harvestTier = TODAY_HARVEST_POOL.find((tier) => grossIncome >= tier.min && grossIncome < tier.max) || TODAY_HARVEST_POOL[0];
-  const todayHarvest = seededPick(harvestTier.lines, `${dateKey}:harvest:${earnedLevel}`, '早餐基金到账');
+  const todayHarvest = seededPick(harvestTier.lines, `${seedBase}:harvest`, '早餐基金到账');
 
   const walletDamagePool = totalExpense <= 0
     ? WALLET_DAMAGE_POOL.safe
@@ -355,6 +351,7 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     dungeonResultText: dungeonResult,
     todayHarvest,
     battleRewardText: todayHarvest,
+    battleRewardLevel: earnedLevel,
     walletDamageLevel,
     walletDamageText: walletDamageLevel,
     privacy,

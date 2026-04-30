@@ -34,7 +34,7 @@ Page({
         remainingText: formatDuration(metrics.remainingSeconds * 1000),
         fishingIndex: metrics.fishingIndex,
         mentalLoss: metrics.mentalLoss,
-        mainStatusText: metrics.mainStatusText || metrics.personality || '稳定续命中',
+        mainStatusText: (metrics.mainStatusText || metrics.personality || '稳定续命中').slice(0, 6),
         conclusion: metrics.conclusion || '钱是赚到了一点，人也被消耗了一点。',
         walletDamageText: metrics.walletDamageText || metrics.walletDamageLevel || '安全',
         battleRewardText: metrics.battleRewardText || metrics.todayHarvest || '早餐基金到账',
@@ -49,106 +49,118 @@ Page({
       const canvas = res[0].node;
       const ctx = canvas.getContext('2d');
       const dpr = wx.getWindowInfo().pixelRatio;
-      const width = res[0].width;
-      const height = res[0].height;
+      const width = 750;
+      const height = 1100;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
 
-      ctx.fillStyle = '#f3f1ec';
-      ctx.fillRect(0, 0, width, height);
-      const cardX = 24;
-      const cardY = 24;
-      const cardW = width - 48;
-      const cardH = height - 48;
+      ctx.fillStyle = '#f5f3ee';
+      ctx.fillRect(0, 0, 750, 1100);
+      const cardX = 55;
+      const cardY = 40;
+      const cardW = 640;
+      const cardH = 980;
       ctx.fillStyle = '#fffdf8';
-      this.roundRect(ctx, cardX, cardY, cardW, cardH, 18);
+      this.roundRect(ctx, cardX, cardY, cardW, cardH, 32);
       ctx.fill();
-      let y = cardY + 52;
+      const contentX = cardX + 40;
+      const contentW = cardW - 80;
 
-      // 1. 顶部品牌区
+      // 1. 顶部品牌区（固定区块）
       ctx.fillStyle = '#111';
-      ctx.font = 'bold 30px sans-serif';
-      ctx.fillText('赚了么', cardX + 28, y);
+      ctx.font = '800 40px sans-serif';
+      ctx.fillText('赚了么', contentX, cardY + 84);
+
+      const badgeText = '老板可见版';
+      let badgeFontSize = 24;
+      let badgeTextWidth = 0;
+      do {
+        ctx.font = `600 ${badgeFontSize}px sans-serif`;
+        badgeTextWidth = ctx.measureText(badgeText).width;
+        if (badgeTextWidth <= 170 || badgeFontSize <= 20) break;
+        badgeFontSize -= 1;
+      } while (badgeFontSize >= 20);
+
       ctx.fillStyle = '#ffd23f';
-      const badgeW = 190;
-      const badgeH = 36;
-      this.roundRect(ctx, cardX + cardW - badgeW - 28, y - 28, badgeW, badgeH, 18);
+      const badgeW = Math.max(130, Math.min(190, badgeTextWidth + 44));
+      const badgeH = 46;
+      const badgeX = cardX + cardW - 40 - badgeW;
+      const badgeY = cardY + 45;
+      this.roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 23);
       ctx.fill();
       ctx.fillStyle = '#111';
-      ctx.font = '18px sans-serif';
-      ctx.fillText('老板可见安全版', cardX + cardW - badgeW - 14, y - 5);
+      ctx.font = `600 ${badgeFontSize}px sans-serif`;
+      ctx.fillText(badgeText, badgeX + 22, badgeY + 31);
+
       // 2. 主状态区
-      y += 48;
-      ctx.fillStyle = '#222';
-      ctx.font = '22px sans-serif';
-      ctx.fillText('今日打工副本结算', cardX + 28, y);
-      y += 34;
+      ctx.fillStyle = '#333';
+      ctx.font = '28px sans-serif';
+      ctx.fillText('今日打工状态', contentX, cardY + 162);
       ctx.fillStyle = '#111';
-      const mainStatusLines = this.wrapTextLines(ctx, metrics.mainStatusText, cardX + 28, y, cardW - 56, 54, 2, 'bold 50px sans-serif', 38);
-      y += mainStatusLines * 54;
-      // 3. 一句话点评
+      ctx.font = '900 64px sans-serif';
+      ctx.fillText((metrics.mainStatusText || '稳定续命中').slice(0, 6), contentX, cardY + 244);
       ctx.fillStyle = '#444';
-      const commentLines = this.wrapTextLines(ctx, metrics.conclusion, cardX + 28, y + 8, cardW - 56, 30, 2, '22px sans-serif', 22);
-      y += (commentLines * 30) + 28;
-      // 4. 今日战果卡
-      ctx.fillStyle = '#fff7d8';
-      this.roundRect(ctx, cardX + 24, y, cardW - 48, 126, 16);
+      this.wrapTextLines(ctx, metrics.conclusion, contentX, cardY + 286, contentW, 42, 2, '28px sans-serif');
+
+      // 3. 今日战果卡
+      const rewardY = cardY + 380;
+      ctx.fillStyle = '#fff4c8';
+      this.roundRect(ctx, contentX, rewardY, contentW, 182, 24);
       ctx.fill();
       ctx.fillStyle = '#7a5a00';
-      ctx.font = '18px sans-serif';
-      ctx.fillText('今日战果', cardX + 44, y + 30);
+      ctx.font = '26px sans-serif';
+      ctx.fillText('今日战果', contentX + 28, rewardY + 46);
       ctx.fillStyle = '#111';
-      this.wrapTextLines(ctx, metrics.battleRewardText, cardX + 44, y + 64, cardW - 88, 36, 2, 'bold 32px sans-serif', 24);
-      y += 146;
-      // 5. 指标区
+      const rewardFont = String(metrics.battleRewardText || '').length > 10 ? '800 34px sans-serif' : '800 40px sans-serif';
+      this.wrapTextLines(ctx, metrics.battleRewardText, contentX + 28, rewardY + 102, contentW - 56, 44, 2, rewardFont);
+
+      // 4. 指标卡片区（仅三项）
+      const statY = rewardY + 214;
       const cards = [
         { label: '当前状态', value: metrics.currentStatus },
         { label: '摸鱼指数', value: `${metrics.fishingIndex}/100` },
-        { label: '精神损耗', value: `${metrics.mentalLoss}/100` },
         { label: '钱包伤害', value: metrics.walletDamageText }
       ];
-      const colW = (cardW - 64) / 2;
+      const statGap = 16;
+      const statH = 98;
       cards.forEach((item, idx) => {
-        const row = Math.floor(idx / 2);
-        const col = idx % 2;
-        const x = cardX + 24 + col * (colW + 16);
-        const cardYPos = y + row * 90;
+        const cardYPos = statY + idx * (statH + statGap);
         ctx.fillStyle = '#fff';
-        this.roundRect(ctx, x, cardYPos, colW, 78, 12);
+        this.roundRect(ctx, contentX, cardYPos, contentW, statH, 16);
         ctx.fill();
         ctx.strokeStyle = '#eee';
         ctx.lineWidth = 1;
         ctx.stroke();
         ctx.fillStyle = '#222';
-        ctx.font = '16px sans-serif';
-        ctx.fillText(item.label, x + 14, cardYPos + 26);
-        this.wrapTextLines(ctx, item.value, x + 14, cardYPos + 55, colW - 28, 24, 1, 'bold 22px sans-serif', 16);
+        ctx.font = '22px sans-serif';
+        ctx.fillText(item.label, contentX + 24, cardYPos + 36);
+        this.wrapTextLines(ctx, item.value, contentX + 24, cardYPos + 74, contentW - 48, 28, 1, '700 30px sans-serif');
       });
-      y += 194;
-      // 6. 底部引导区
+
+      // 5. 底部引导区（固定到底部）
+      const footerY = cardY + cardH - 170;
       ctx.strokeStyle = '#ece7dd';
       ctx.beginPath();
-      ctx.moveTo(cardX + 24, y);
-      ctx.lineTo(cardX + cardW - 24, y);
+      ctx.moveTo(contentX, footerY);
+      ctx.lineTo(contentX + contentW, footerY);
       ctx.stroke();
-      y += 28;
       ctx.fillStyle = '#111';
-      ctx.font = 'bold 24px sans-serif';
-      ctx.fillText('今天打工回血了吗？', cardX + 28, y);
+      ctx.font = '700 26px sans-serif';
+      ctx.fillText('今天打工回血了吗？', contentX, footerY + 48);
       ctx.fillStyle = '#666';
-      ctx.font = '18px sans-serif';
-      ctx.fillText('长按识别，看看你的牛马进度条', cardX + 28, y + 30);
-      const qrSize = 98;
-      const qrX = cardX + cardW - qrSize - 30;
-      const qrY = y - 20;
+      ctx.font = '22px sans-serif';
+      ctx.fillText('看看你的牛马进度条', contentX, footerY + 84);
+      const qrSize = 120;
+      const qrX = contentX + contentW - qrSize;
+      const qrY = footerY + 24;
       ctx.strokeStyle = '#999';
       ctx.lineWidth = 2;
       this.roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
       ctx.stroke();
       ctx.fillStyle = '#999';
-      ctx.font = '14px sans-serif';
-      ctx.fillText('小程序码', qrX + 20, qrY + 56);
+      ctx.font = '18px sans-serif';
+      ctx.fillText('小程序码', qrX + 20, qrY + 66);
     });
   },
   roundRect(ctx, x, y, w, h, r) {
