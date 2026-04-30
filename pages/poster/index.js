@@ -49,37 +49,41 @@ Page({
         ctx.drawImage(bg, 0, 0, width, height);
         ctx.fillStyle = '#111';
         ctx.font = '800 40px sans-serif';
-        ctx.fillText('赚了么', 90, 110);
+        ctx.fillText('赚了么', 70, 90);
+
+        ctx.fillStyle = '#111';
+        ctx.font = '600 26px sans-serif';
+        ctx.fillText('老板可见版', 535, 90);
 
         ctx.fillStyle = '#333';
         ctx.font = '28px sans-serif';
         ctx.fillText('今日打工状态', 90, 190);
         ctx.fillStyle = '#111';
-        this.wrapTextLines(ctx, metrics.mainStatusText, 90, 258, 570, 68, 2, '900 64px sans-serif');
+        this.wrapTextLines(ctx, metrics.mainStatusText, 90, 270, 570, 68, 2, '900 64px sans-serif');
 
         ctx.fillStyle = '#555';
-        this.wrapTextLines(ctx, metrics.conclusion, 90, 352, 570, 42, 2, '28px sans-serif');
+        this.wrapTextLines(ctx, metrics.conclusion, 90, 365, 570, 42, 2, '28px sans-serif');
 
         ctx.fillStyle = '#7A5A00';
         ctx.font = '26px sans-serif';
-        ctx.fillText('今日战果', 118, 438);
+        ctx.fillText('今日战果', 90, 490);
         ctx.fillStyle = '#111';
-        this.wrapTextLines(ctx, metrics.battleRewardText, 118, 500, 514, 44, 2, '800 38px sans-serif');
+        this.wrapTextLines(ctx, metrics.battleRewardText, 90, 560, 570, 44, 2, '800 38px sans-serif');
 
-        this.drawMetricText(ctx, 118, 662, '当前状态', metrics.currentStatusText);
-        this.drawMetricText(ctx, 118, 802, '摸鱼指数', metrics.fishingIndex);
-        this.drawMetricText(ctx, 406, 802, '钱包伤害', metrics.walletDamageText || '***');
+        this.drawMetricText(ctx, 90, 720, '当前状态', metrics.currentStatusText);
+        this.drawMetricText(ctx, 380, 720, '摸鱼指数', metrics.fishingIndex);
+        this.drawMetricText(ctx, 90, 850, '钱包伤害', metrics.walletDamageText || '***');
 
         ctx.fillStyle = '#222';
         ctx.font = '600 26px sans-serif';
-        ctx.fillText('今天打工回血了吗？', 90, 950);
+        ctx.fillText('今天打工回血了吗？', 70, 990);
         ctx.fillStyle = '#777';
         ctx.font = '22px sans-serif';
-        ctx.fillText(metrics.footerGuide, 90, 988);
+        ctx.fillText(metrics.footerGuide, 70, 1035);
 
         ctx.fillStyle = '#999';
         ctx.font = '20px sans-serif';
-        ctx.fillText('小程序码', 560, 998);
+        ctx.fillText('小程序码', 600, 1010);
 
         this.updatePreviewImage();
       };
