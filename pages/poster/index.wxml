@@ -1,7 +1,8 @@
 <view class="container">
   <view class="poster-wrap">
-    <image wx:if="{{posterImage}}" class="poster-preview" src="{{posterImage}}" mode="widthFix"/>
-    <canvas type="2d" id="posterCanvas" canvas-id="posterCanvas" class="poster-canvas-hidden"></canvas>
+    <image class="poster-debug-bg" src="/assets/poster/poster-bg.png" mode="widthFix" binderror="onDebugBgError"/>
+    <image wx:if="{{posterImagePath}}" class="poster-preview" src="{{posterImagePath}}" mode="widthFix"/>
+    <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
   </view>
 
   <view class="actions">
