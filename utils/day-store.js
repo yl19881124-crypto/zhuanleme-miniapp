@@ -5,6 +5,17 @@ const STORAGE_KEYS = {
   PRIVACY: 'privacy_settings'
 };
 
+const DEFAULT_CONFIG = {
+  monthlySalary: 12000,
+  workdaysPerMonth: 22,
+  startTime: '09:30',
+  endTime: '19:00',
+  lunchStart: '12:00',
+  lunchEnd: '13:00',
+  lunchPaid: false,
+  weekendPaid: false
+};
+
 function getStorage(key, fallback) {
   const value = wx.getStorageSync(key);
   return value === '' || value === undefined ? fallback : value;
@@ -14,19 +25,39 @@ function setStorage(key, value) {
   wx.setStorageSync(key, value);
 }
 
-function getConfig() {
-  return getStorage(STORAGE_KEYS.CONFIG, {
-    monthlySalary: 0,
-    workDaysPerMonth: 22,
-    onWorkTime: '09:00',
-    offWorkTime: '18:00',
-    lunchStart: '12:00',
-    lunchEnd: '13:00',
-    lunchPaid: false
-  });
+function toNumber(value, fallback) {
+  const next = Number(value);
+  return Number.isFinite(next) ? next : fallback;
 }
 
-function saveConfig(config) { setStorage(STORAGE_KEYS.CONFIG, config); }
+function normalizeConfig(raw = {}) {
+  const source = raw && typeof raw === 'object' ? raw : {};
+  const normalized = {
+    monthlySalary: toNumber(source.monthlySalary ?? source.monthSalary ?? source.monthlyIncome ?? source.salary, DEFAULT_CONFIG.monthlySalary),
+    workdaysPerMonth: toNumber(source.workdaysPerMonth ?? source.workDaysPerMonth ?? source.workdays ?? source.workDays ?? source.workdayCount, DEFAULT_CONFIG.workdaysPerMonth),
+    startTime: source.startTime || source.onWorkTime || DEFAULT_CONFIG.startTime,
+    endTime: source.endTime || source.offWorkTime || DEFAULT_CONFIG.endTime,
+    lunchStart: source.lunchStart || DEFAULT_CONFIG.lunchStart,
+    lunchEnd: source.lunchEnd || DEFAULT_CONFIG.lunchEnd,
+    lunchPaid: Boolean(source.lunchPaid),
+    weekendPaid: Boolean(source.weekendPaid)
+  };
+  normalized.workdaysPerMonth = Math.max(1, normalized.workdaysPerMonth);
+  return normalized;
+}
+
+function getConfig() {
+  const fromSalaryConfig = getStorage(STORAGE_KEYS.CONFIG, null);
+  const fromLegacyProfile = getStorage('userProfile', null);
+  const config = normalizeConfig(fromSalaryConfig || fromLegacyProfile || DEFAULT_CONFIG);
+  console.log('[config]', config);
+  return config;
+}
+
+function saveConfig(config) {
+  const normalized = normalizeConfig(config);
+  setStorage(STORAGE_KEYS.CONFIG, normalized);
+}
 
 function getPrivacy() { return getStorage(STORAGE_KEYS.PRIVACY, { hideTodayIncome: false, maskOnShare: true }); }
 
@@ -87,6 +118,7 @@ function clearTodayRecords(now = Date.now()) {
 
 module.exports = {
   STORAGE_KEYS,
+  DEFAULT_CONFIG,
   getConfig,
   saveConfig,
   getPrivacy,
