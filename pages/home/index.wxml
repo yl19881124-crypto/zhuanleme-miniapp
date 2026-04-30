@@ -19,7 +19,7 @@
     <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800" />
 
     <view class="metrics">
-      <view>每秒收入：{{perSecond}}</view><view>已工作时长：{{workedDuration}}</view>
+      <view>正在回血：{{perSecondText}}</view><view>已工作时长：{{workedDuration}}</view>
       <view>距离下班：{{offWorkCountdown}}</view><view>当前状态：{{currentStatus}}</view>
     </view>
     <view class="roast">{{roastText}}</view>
@@ -33,8 +33,8 @@
   </view>
 
   <view class="card quicks">
-    <button class="btn-primary" bindtap="openExpensePopup">记一笔消费</button>
-    <button class="btn-secondary" bindtap="goSettlement">今日打工副本结算</button>
+    <button class="quick-btn btn-primary" bindtap="openExpensePopup">记一笔消费</button>
+    <button class="quick-btn btn-secondary" bindtap="goSettlement">今日结算</button>
   </view>
 
   <view class="card overview">
@@ -60,10 +60,27 @@
   <view wx:if="{{showExpensePopup}}" class="popup-mask" bindtap="closeExpensePopup">
     <view class="popup" catchtap="noop">
       <view class="title">记一笔消费</view>
-      <input class="input" placeholder="金额" type="digit" bindinput="onAmount" value="{{form.amount}}" />
-      <picker mode="selector" range="{{categories}}" bindchange="onCategory"><view class="picker">分类：{{form.category}}</view></picker>
-      <input class="input" placeholder="备注（可选）" bindinput="onNote" value="{{form.note}}" />
-      <button class="btn-primary" bindtap="addExpense">确认记录</button>
+      <view class="field">
+        <view class="label">金额</view>
+        <view class="money-input-wrap">
+          <text class="currency">¥</text>
+          <input class="popup-input" placeholder="请输入金额" type="digit" bindinput="onAmount" value="{{form.amount}}" />
+        </view>
+      </view>
+      <view class="field">
+        <view class="label">分类</view>
+        <picker mode="selector" range="{{categories}}" bindchange="onCategory">
+          <view class="picker"> {{form.category}} </view>
+        </picker>
+      </view>
+      <view class="field">
+        <view class="label">备注</view>
+        <input class="popup-input" placeholder="选填，比如：冰美式" bindinput="onNote" value="{{form.note}}" />
+      </view>
+      <view class="popup-actions">
+        <button class="quick-btn btn-secondary" bindtap="closeExpensePopup">取消</button>
+        <button class="quick-btn btn-primary" bindtap="addExpense">确认记录</button>
+      </view>
     </view>
   </view>
 </view>

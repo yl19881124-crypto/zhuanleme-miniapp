@@ -10,12 +10,21 @@
 .status-item { padding: 12rpx 18rpx; border:1px solid #ddd; border-radius: 20rpx; font-size:24rpx; }
 .status-item.active { background:#111; color:#f7c948; border-color:#111; }
 .quicks { display:flex; gap: 12rpx; }
-.btn-secondary { flex:1; background:#fff; border:1px solid #111; color:#111; }
+.quick-btn { flex:1; height: 88rpx; line-height: 88rpx; padding: 0; border-radius: 16rpx; font-size: 30rpx; display:flex; align-items:center; justify-content:center; text-align:center; white-space: nowrap; }
+.btn-primary { background:#111; color:#fff; border:1px solid #111; }
+.btn-secondary { background:#fff; border:1px solid #111; color:#111; }
 .overview .mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:12rpx; }
 .overview .mini-grid view { background:#fafafa; padding:12rpx; border-radius:12rpx; white-space: pre-line; }
 .overview text { display:block; margin-top:6rpx; font-weight:600; }
-.popup-mask { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:flex-end; }
+.popup-mask { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:flex-end; z-index: 9999; }
 .popup { width:100%; background:#fff; border-radius: 24rpx 24rpx 0 0; padding: 24rpx; }
-.picker { padding:16rpx; background:#f6f6f6; border-radius:10rpx; margin: 12rpx 0; }
+.field { margin-top: 14rpx; }
+.label { font-size: 24rpx; color:#555; margin-bottom: 8rpx; }
+.money-input-wrap { height: 84rpx; border:1px solid #ddd; border-radius: 12rpx; background:#f8f8f8; display:flex; align-items:center; padding:0 16rpx; }
+.currency { font-size: 30rpx; margin-right: 8rpx; color:#222; }
+.popup-input { height: 84rpx; border:1px solid #ddd; border-radius: 12rpx; background:#f8f8f8; padding:0 16rpx; font-size: 28rpx; }
+.money-input-wrap .popup-input { flex:1; border:none; background:transparent; padding:0; }
+.picker { height: 84rpx; border:1px solid #ddd; border-radius:12rpx; background:#f8f8f8; display:flex; align-items:center; padding:0 16rpx; }
+.popup-actions { display:flex; gap: 12rpx; margin-top: 24rpx; }
 .expense-row { margin-top: 8rpx; }
 .roast { margin-top:10rpx; color:#666; }

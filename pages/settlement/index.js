@@ -8,6 +8,19 @@ Page({
     fishIndex:0, mental:0, persona:'稳定续命型员工', roast:'钱是赚到了一点，人也被消耗了一点。', result: '勉强通关'
   },
   onShow() {
+    this.stopRefresh();
+    this.refresh();
+    this.timer = setInterval(() => this.refresh(), 1000);
+  },
+  onHide() { this.stopRefresh(); },
+  onUnload() { this.stopRefresh(); },
+  stopRefresh() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  },
+  refresh() {
     const privacy = get(KEYS.PRIVACY, {});
     const hidden = !!privacy.hideTodayIncome;
     const core = getRealtimeCoreData(Date.now());
