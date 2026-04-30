@@ -1,11 +1,13 @@
 const ALL_STATUS = ['正常上班', '摸鱼中', '开会中', '假装忙', '崩溃中', '午休中', '加班中'];
 
 const MAIN_STATUS_POOL = {
+  opening: ['刚刚开工中', '开局回血中', '今日副本启动中', '工位加载中'],
   stable: ['稳定续命中', '正常营业中', '平稳打工中', '稳定回血中', '安静搬砖中', '工位待机中'],
   fishing: ['带薪摸鱼中', '工资套利中', '表面在线中', '假装很忙中', '灵魂离岗中', '身在工位心在远方中'],
   meeting: ['会议包围中', '被会议消耗中', '认真参会表演中', '会议变现中', '一边听一边飘中'],
-  tired: ['靠意志上班中', '低电量续航中', '人还在岗中', '机械运转中', '强撑在线中'],
-  breakdown: ['情绪稳定崩溃中', '一边上班一边碎中', '表面冷静中', '精神重启中', '需求追杀中'],
+  pretending: ['假装很忙中', '表面生产中', '工位待机中', '看起来很努力中', '忙碌表演中', '效率伪装中'],
+  tired: ['低电量续航中', '靠意志上班中', '人还在岗中', '机械运转中', '强撑在线中', '下班执念中'],
+  breakdown: ['情绪稳定崩溃中', '一边上班一边碎中', '表面冷静中', '精神重启中', '需求追杀中', '临界续命中'],
   overtime: ['加班献祭中', '下班遥遥无期中', '夜间搬砖中', '额外出卖时间中', '今日份延长营业中']
 };
 
@@ -43,6 +45,56 @@ const TODAY_HARVEST_POOL = [
 function pickRandom(list = [], fallback = '') {
   if (!Array.isArray(list) || !list.length) return fallback;
   return list[Math.floor(Math.random() * list.length)];
+}
+function hashSeed(input = '') {
+  const text = String(input || '');
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+  }
+  return Math.abs(hash >>> 0);
+}
+function seededPick(list = [], seed = '', fallback = '') {
+  if (!Array.isArray(list) || !list.length) return fallback;
+  const idx = hashSeed(seed) % list.length;
+  return list[idx];
+}
+function getEarnedLevel(earned = 0) {
+  if (earned < 40) return 'lv1';
+  if (earned < 120) return 'lv2';
+  if (earned < 300) return 'lv3';
+  if (earned < 800) return 'lv4';
+  return 'lv5';
+}
+function resolveMainStatus(metrics = {}) {
+  const workedMinutes = Math.floor((metrics.workedSeconds || 0) / 60);
+  const meetingMinutes = Math.floor((metrics.meetingSeconds || 0) / 60);
+  const fishingMinutes = Math.floor((metrics.fishingSeconds || 0) / 60);
+  const overtimeMinutes = Math.floor((metrics.overtimeSeconds || 0) / 60);
+  const pretendingMinutes = Math.floor(((metrics.statusDurations?.['假装忙'] || 0) / 1000) / 60);
+  const breakdownMinutes = Math.floor(((metrics.statusDurations?.['崩溃中'] || 0) / 1000) / 60);
+  const currentStatusDurationMinutes = metrics.currentStatusDurationMinutes || 0;
+  const currentStatus = metrics.currentStatus || '';
+  const workedSafe = Math.max(1, workedMinutes);
+  const meetingRatio = meetingMinutes / workedSafe;
+  const fishingRatio = fishingMinutes / workedSafe;
+  const pretendingRatio = pretendingMinutes / workedSafe;
+
+  if (workedMinutes < 15) return { category: 'opening' };
+  if (overtimeMinutes >= 20 || (currentStatus === '加班中' && currentStatusDurationMinutes >= 10)) return { category: 'overtime' };
+  if (breakdownMinutes >= 10 || (currentStatus === '崩溃中' && currentStatusDurationMinutes >= 5) || (metrics.mentalLoss || 0) >= 70) return { category: 'breakdown' };
+
+  const fishingMatched = fishingMinutes >= 30 || (fishingMinutes >= 20 && fishingRatio >= 0.15) || (currentStatus === '摸鱼中' && currentStatusDurationMinutes >= 15);
+  const meetingMatched = meetingMinutes >= 45 || (meetingMinutes >= 25 && meetingRatio >= 0.18) || (currentStatus === '开会中' && currentStatusDurationMinutes >= 20);
+  if (fishingMinutes >= 60 && fishingMatched) return { category: 'fishing' };
+  if (meetingMatched) return { category: 'meeting' };
+  if (fishingMatched) return { category: 'fishing' };
+  if (pretendingMinutes >= 30 || (pretendingMinutes >= 20 && pretendingRatio >= 0.15) || (currentStatus === '假装忙' && currentStatusDurationMinutes >= 15)) return { category: 'pretending' };
+  if (workedMinutes >= 360 && (metrics.progress || 0) >= 70) return { category: 'tired' };
+  if ((metrics.mentalLoss || 0) >= 45) return { category: 'tired' };
+  if ((metrics.remainingSeconds || 0) <= 3600 && workedMinutes >= 300) return { category: 'tired' };
+  return { category: 'stable' };
 }
 
 function toDateKey(input) {
@@ -226,22 +278,29 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
   const fishingIndex = Math.min(100, Math.round((fishingSeconds / Math.max(1, workedSeconds)) * 100));
   const mentalLoss = Math.min(100, Math.round((((statusDurations['崩溃中'] || 0) + (statusDurations['加班中'] || 0)) / Math.max(1, workedMilliseconds)) * 130));
 
-  const statusKey = overtimeSeconds > 7200
-    ? 'overtime'
-    : (statusDurations['崩溃中'] || 0) > 1800000
-      ? 'breakdown'
-      : meetingSeconds > 5400
-        ? 'meeting'
-        : fishingSeconds > 7200
-          ? 'fishing'
-          : mentalLoss > 65
-            ? 'tired'
-            : 'stable';
-  const personality = pickRandom(MAIN_STATUS_POOL[statusKey], '稳定续命中');
+  const currentStatusDurationMinutes = (currentStatus && currentStatusStartAt)
+    ? Math.max(0, Math.floor((effectiveNow - currentStatusStartAt) / 60000))
+    : 0;
+  const remainingSeconds = Math.max(0, Math.floor((offAt - effectiveNow) / 1000));
+  const mainStatus = resolveMainStatus({
+    workedSeconds,
+    progress: Math.min(100, Math.round((scheduleWorkedSeconds / effectiveWorkSeconds) * 100)),
+    currentStatus,
+    statusDurations,
+    fishingSeconds,
+    meetingSeconds,
+    overtimeSeconds,
+    mentalLoss,
+    remainingSeconds,
+    currentStatusDurationMinutes
+  });
+  const earnedLevel = getEarnedLevel(grossIncome);
+  const seedBase = `${dateKey}:${mainStatus.category}:${earnedLevel}`;
+  const personality = seededPick(MAIN_STATUS_POOL[mainStatus.category], seedBase, '稳定续命中');
   const conclusion = pickRandom(COMMENT_POOL, '钱是赚到了一点，人也被消耗了一点。');
-  const dungeonResult = pickRandom(DUNGEON_RESULT_POOL, '勉强通关');
+  const dungeonResult = seededPick(DUNGEON_RESULT_POOL, `${dateKey}:dungeon:${earnedLevel}`, '勉强通关');
   const harvestTier = TODAY_HARVEST_POOL.find((tier) => grossIncome >= tier.min && grossIncome < tier.max) || TODAY_HARVEST_POOL[0];
-  const todayHarvest = pickRandom(harvestTier.lines, '早餐基金到账');
+  const todayHarvest = seededPick(harvestTier.lines, `${dateKey}:harvest:${earnedLevel}`, '早餐基金到账');
 
   const walletDamagePool = totalExpense <= 0
     ? WALLET_DAMAGE_POOL.safe
@@ -250,7 +309,8 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
       : totalExpense <= 150
         ? WALLET_DAMAGE_POOL.medium
         : WALLET_DAMAGE_POOL.heavy;
-  const walletDamageLevel = pickRandom(walletDamagePool, '安全');
+  const walletDamageLevel = seededPick(walletDamagePool, `${dateKey}:wallet:${Math.round(totalExpense)}`, '安全');
+  const currentStatusText = currentStatus;
 
   console.log('[metrics salary]', {
     monthlySalary,
@@ -273,7 +333,7 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     secondSalary,
     workedSeconds,
     scheduleWorkedSeconds,
-    remainingSeconds: Math.max(0, Math.floor((offAt - effectiveNow) / 1000)),
+    remainingSeconds,
     progress: Math.min(100, Math.round((scheduleWorkedSeconds / effectiveWorkSeconds) * 100)),
     effectiveWorkSeconds,
     monthlySalary,
@@ -287,10 +347,16 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     fishingIndex,
     mentalLoss,
     personality,
+    mainStatusText: personality,
+    mainStatusCategory: mainStatus.category,
+    currentStatusText,
     conclusion,
     dungeonResult,
+    dungeonResultText: dungeonResult,
     todayHarvest,
+    battleRewardText: todayHarvest,
     walletDamageLevel,
+    walletDamageText: walletDamageLevel,
     privacy,
     settledAt
   };
