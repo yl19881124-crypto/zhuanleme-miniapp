@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="poster-wrap">
+    <canvas type="2d" id="posterCanvas" canvas-id="posterCanvas" class="poster-canvas"></canvas>
+  </view>
+
+  <view class="actions">
+    <button class="btn btn-primary" bindtap="savePoster">保存到相册</button>
+    <button class="btn btn-secondary" open-type="share">分享给朋友</button>
+    <button class="btn btn-ghost" bindtap="goBack">返回结算页</button>
+  </view>
+</view>

@@ -26,6 +26,6 @@ Page({
       result: metrics.netIncome < 0 ? '倒贴打工' : metrics.progress >= 100 ? '已通关' : '勉强通关'
     });
   },
-  generatePoster() { wx.showToast({ title: '海报生成功能开发中（默认脱敏）', icon: 'none' }); },
+  generatePoster() { wx.navigateTo({ url: '/pages/poster/index' }); },
   restartDay() { clearTodayRecords(Date.now()); wx.showToast({ title: '已重置，明天再战', icon: 'success' }); this.refresh(); }
 });
