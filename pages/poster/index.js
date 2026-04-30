@@ -20,14 +20,6 @@ const STATUS_LABEL_MAP = {
   收工: '已收工'
 };
 
-function getWalletDamageLevel(totalExpense) {
-  const amount = Number(totalExpense || 0);
-  if (amount <= 0) return '安全';
-  if (amount <= 50) return '轻度';
-  if (amount <= 150) return '中度';
-  return '重度';
-}
-
 Page({
   data: { metrics: null },
   onLoad() { this.loadMetrics(); },
@@ -42,9 +34,11 @@ Page({
         remainingText: formatDuration(metrics.remainingSeconds * 1000),
         fishingIndex: metrics.fishingIndex,
         mentalLoss: metrics.mentalLoss,
-        personality: metrics.personality || '稳定续命型员工',
+        personality: metrics.personality || '稳定续命中',
         conclusion: metrics.conclusion || '钱是赚到了一点，人也被消耗了一点。',
-        walletDamageLevel: getWalletDamageLevel(metrics.totalExpense)
+        walletDamageLevel: metrics.walletDamageLevel || '安全',
+        todayHarvest: metrics.todayHarvest || '早餐基金到账',
+        dungeonResult: metrics.dungeonResult || '勉强通关'
       }
     });
   },
@@ -88,17 +82,22 @@ Page({
       ctx.font = '24px sans-serif';
       this.wrapText(ctx, metrics.conclusion, 44, 230, width - 88, 36);
 
+      ctx.fillStyle = '#111';
+      ctx.font = 'bold 28px sans-serif';
+      ctx.fillText('今日战果', 44, 294);
+      ctx.fillStyle = '#2d6a4f';
+      ctx.font = '24px sans-serif';
+      this.wrapText(ctx, metrics.todayHarvest, 44, 330, width - 88, 34);
+
       const cards = [
-        `打工进度：${metrics.progress}%`,
         `当前状态：${metrics.currentStatus}`,
-        `已工作：${metrics.workedText}`,
-        `距离下班：${metrics.remainingText}`,
         `摸鱼指数：${metrics.fishingIndex}/100`,
         `精神损耗：${metrics.mentalLoss}/100`,
-        `钱包伤害：${metrics.walletDamageLevel}`
+        `钱包伤害：${metrics.walletDamageLevel}`,
+        `副本结果：${metrics.dungeonResult}`
       ];
 
-      let y = 330;
+      let y = 390;
       cards.forEach((item) => {
         ctx.fillStyle = '#f8f8f8';
         this.roundRect(ctx, 44, y, width - 88, 72, 12);
