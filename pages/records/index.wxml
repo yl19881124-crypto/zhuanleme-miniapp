@@ -1,0 +1,23 @@
+<view class="container">
+  <view class="tabs card">
+    <view class="tab {{tab==='status'?'active':''}}" data-tab="status" bindtap="switchTab">状态记录</view>
+    <view class="tab {{tab==='expense'?'active':''}}" data-tab="expense" bindtap="switchTab">消费记录</view>
+  </view>
+
+  <view wx:if="{{tab==='status'}}" class="card">
+    <view class="title">今日状态累计时长</view>
+    <view wx:for="{{statusSummary}}" wx:key="name" class="row"><text>{{item.name}}</text><text>{{item.duration}}</text></view>
+    <view class="subtle">摸鱼指数：{{fishIndex}} / 100</view>
+    <view class="subtle">精神损耗：{{mental}} / 100</view>
+  </view>
+
+  <view wx:if="{{tab==='expense'}}" class="card">
+    <view class="title">今日消费列表</view>
+    <view wx:if="{{!expenses.length}}" class="subtle">今天还没花钱，钱包暂时安全。</view>
+    <view wx:for="{{expenses}}" wx:key="time" class="expense-item">
+      <view>{{item.category}} · ¥{{item.amount}}</view>
+      <view class="subtle">约等于白干 {{item.grind}}</view>
+    </view>
+    <button class="btn-primary" bindtap="openExpensePopup">新增消费</button>
+  </view>
+</view>

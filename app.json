@@ -2,10 +2,11 @@
   "pages": [
     "pages/setup/index",
     "pages/home/index",
-    "pages/status/index",
-    "pages/expense/index",
+    "pages/records/index",
     "pages/settlement/index",
-    "pages/settings/index"
+    "pages/settings/index",
+    "pages/status/index",
+    "pages/expense/index"
   ],
   "window": {
     "navigationBarTitleText": "牛马进度条",
@@ -21,8 +22,7 @@
     "borderStyle": "black",
     "list": [
       { "pagePath": "pages/home/index", "text": "首页" },
-      { "pagePath": "pages/status/index", "text": "状态" },
-      { "pagePath": "pages/expense/index", "text": "消费" },
+      { "pagePath": "pages/records/index", "text": "记录" },
       { "pagePath": "pages/settlement/index", "text": "结算" },
       { "pagePath": "pages/settings/index", "text": "我的" }
     ]

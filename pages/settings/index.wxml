@@ -1,10 +1,30 @@
 <view class="container">
   <view class="card">
-    <view class="title">我的设置</view>
-    <view class="subtle">隐私优先，本地优先。</view>
+    <view class="title">工资与工作规则</view>
+    <input class="input" placeholder="月薪" data-key="monthlySalary" value="{{profile.monthlySalary}}" bindinput="input" />
+    <input class="input" placeholder="每月工作日" data-key="workDaysPerMonth" value="{{profile.workDaysPerMonth}}" bindinput="input" />
+    <view class="item"><text>上班时间</text><input data-key="onWorkTime" value="{{profile.onWorkTime}}" bindinput="input"/></view>
+    <view class="item"><text>下班时间</text><input data-key="offWorkTime" value="{{profile.offWorkTime}}" bindinput="input"/></view>
+    <view class="item"><text>午休开始</text><input data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input"/></view>
+    <view class="item"><text>午休结束</text><input data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input"/></view>
+    <view class="item"><text>午休计薪</text><switch checked="{{profile.lunchPaid}}" data-key="lunchPaid" bindchange="toggleProfile"/></view>
+    <view class="item"><text>周末计薪</text><switch checked="{{profile.weekendPaid}}" data-key="weekendPaid" bindchange="toggleProfile"/></view>
+    <button class="btn-primary" bindtap="saveProfile">保存设置</button>
+  </view>
+
+  <view class="card">
+    <view class="title">隐私设置</view>
     <view class="item"><text>隐藏薪资</text><switch checked="{{privacy.hideSalary}}" data-key="hideSalary" bindchange="onPrivacyChange"/></view>
     <view class="item"><text>隐藏今日已赚</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
     <view class="item"><text>隐藏净收入</text><switch checked="{{privacy.hideNetIncome}}" data-key="hideNetIncome" bindchange="onPrivacyChange"/></view>
     <view class="item"><text>分享海报脱敏</text><switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange"/></view>
+    <view class="subtle">分享内容默认不展示真实收入，避免工资被反推。</view>
+  </view>
+
+  <view class="card">
+    <view class="title">数据管理</view>
+    <button class="btn-secondary" bindtap="clearToday">清空今日记录</button>
+    <button class="btn-secondary" bindtap="resetAll">重置所有设置</button>
+    <button class="btn-secondary" bindtap="exportData">导出本地数据（占位）</button>
   </view>
 </view>
