@@ -2,7 +2,19 @@ const { getRealtimeCoreData, ALL_STATUS, formatDuration } = require('../../utils
 
 Page({
   data: { tab: 'status', statusSummary: [], fishIndex: 0, mental: 0, expenses: [] },
-  onShow() { this.refresh(); },
+  onShow() {
+    this.stopRefresh();
+    this.refresh();
+    this.timer = setInterval(() => this.refresh(), 1000);
+  },
+  onHide() { this.stopRefresh(); },
+  onUnload() { this.stopRefresh(); },
+  stopRefresh() {
+    if (this.timer) {
+      clearInterval(this.timer);
+      this.timer = null;
+    }
+  },
   switchTab(e) { this.setData({ tab: e.currentTarget.dataset.tab }); },
   refresh() {
     const core = getRealtimeCoreData(Date.now());

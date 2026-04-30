@@ -3,7 +3,7 @@ const { formatMoney } = require('../../utils/wage');
 const { getRealtimeCoreData, formatDuration, formatCountdown } = require('../../utils/day-metrics');
 
 const STATUS_LIST = ['正常上班', '摸鱼中', '开会中', '假装忙', '崩溃中', '午休中', '加班中', '收工'];
-const CATEGORIES = ['咖啡', '外卖', '通勤', '奶茶', '购物', '其他'];
+const CATEGORIES = ['咖啡', '奶茶', '午饭', '通勤', '外卖', '购物', '其他'];
 
 function roast(status) {
   const map = {
@@ -22,7 +22,7 @@ function roast(status) {
 Page({
   data: {
     statusList: STATUS_LIST, categories: CATEGORIES, currentStatus: '正常上班', roastText: roast('正常上班'),
-    progress: 0, todayIncome: '0.00', perSecond: '0.0000', workedDuration: '0小时0分', offWorkCountdown: '00:00:00',
+    progress: 0, todayIncome: '0.00', perSecondText: '+¥0.0000/s', workedDuration: '0小时0分', offWorkCountdown: '00:00:00',
     todayExpense: '0.00', netIncome: '0.00', fishDuration: '0小时0分', meetingDuration: '0小时0分', recentExpenses: [],
     showExpensePopup: false, form: { amount: '', category: '咖啡', note: '' }, hide: {}, hideLabel: '👁 金额可见'
   },
@@ -51,7 +51,7 @@ Page({
       currentStatus: core.currentStatus,
       roastText: roast(core.currentStatus),
       progress: core.progress,
-      perSecond: hidden ? '***' : core.secondIncome.toFixed(4),
+      perSecondText: hidden ? '***' : `+¥${core.secondIncome.toFixed(4)}/s`,
       todayIncome: formatMoney(core.todayEarned, hidden),
       workedDuration: formatDuration(core.totalWorkedMsByStatus || core.workedSeconds * 1000),
       offWorkCountdown: formatCountdown(core.offWorkCountdownSec),
@@ -79,18 +79,19 @@ Page({
   },
   openExpensePopup() { this.setData({ showExpensePopup: true }); },
   closeExpensePopup() { this.setData({ showExpensePopup: false }); },
+  noop() {},
   onAmount(e) { this.setData({ 'form.amount': e.detail.value }); },
   onNote(e) { this.setData({ 'form.note': e.detail.value }); },
   onCategory(e) { this.setData({ 'form.category': CATEGORIES[e.detail.value] }); },
   addExpense() {
     const core = getRealtimeCoreData(Date.now());
     const amount = Number(this.data.form.amount || 0);
-    if (!amount) return wx.showToast({ title: '请输入金额', icon: 'none' });
+    if (!(amount > 0)) return wx.showToast({ title: '请输入有效金额', icon: 'none' });
     const grindMinutes = core.secondIncome ? Math.round(amount / core.secondIncome / 60) : 0;
     const logs = get(KEYS.EXPENSE_LOGS, []);
     logs.unshift({ ...this.data.form, amount, grindMinutes, time: Date.now() });
     set(KEYS.EXPENSE_LOGS, logs.slice(0, 200));
-    wx.showToast({ title: `约白干${grindMinutes}分钟`, icon: 'none' });
+    wx.showToast({ title: '已记录，这笔消费让钱包轻微受伤', icon: 'none' });
     this.setData({ showExpensePopup: false, form: { amount: '', category: '咖啡', note: '' } });
     this.updateRealtimeData();
   },
