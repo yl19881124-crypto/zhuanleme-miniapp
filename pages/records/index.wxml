@@ -6,18 +6,18 @@
 
   <view wx:if="{{tab==='status'}}" class="card">
     <view class="title">今日状态累计时长</view>
-    <view wx:for="{{statusSummary}}" wx:key="name" class="row"><text>{{item.name}}</text><text>{{item.duration}}</text></view>
+    <view wx:for="{{statusSummary}}" wx:key="name" class="row {{item.raw===0?'weak':''}}"><text>{{item.name}}</text><text>{{item.duration}}</text></view>
     <view class="subtle">摸鱼指数：{{fishIndex}} / 100</view>
     <view class="subtle">精神损耗：{{mental}} / 100</view>
+    <view class="summary-line">今天公司买到了你的时间，但没完全买到效率。</view>
   </view>
 
   <view wx:if="{{tab==='expense'}}" class="card">
-    <view class="title">今日消费列表</view>
+    <view class="title">钱包伤害记录</view>
     <view wx:if="{{!expenses.length}}" class="subtle">今天还没花钱，钱包暂时安全。</view>
     <view wx:for="{{expenses}}" wx:key="time" class="expense-item">
       <view>{{item.category}} · ¥{{item.amount}}</view>
       <view class="subtle">约等于白干 {{item.grind}}</view>
     </view>
-    <button class="btn-primary" bindtap="openExpensePopup">新增消费</button>
   </view>
 </view>

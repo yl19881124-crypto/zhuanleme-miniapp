@@ -4,14 +4,24 @@
     <view class="subtle">今天打工回血了吗？</view>
   </view>
 
-  <view class="card">
-    <view class="title">今日打工进度 <text class="accent">{{progress}}%</text></view>
-    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800" />
-    <view class="metrics">
-      <view>今日已赚：{{todayIncome}}</view><view>每秒收入：{{perSecond}}</view>
-      <view>已工作时长：{{workedDuration}}</view><view>距离下班：{{offWorkCountdown}}</view>
+  <view class="card hero-card">
+    <view class="hero-head">
+      <view>
+        <view class="subtle">今日已赚</view>
+        <view class="hero-money">{{todayIncome}}</view>
+      </view>
+      <view class="privacy-toggle" bindtap="togglePrivacy">{{hide.hideTodayIncome ? '🙈 隐私模式' : '👀 公开模式'}}</view>
     </view>
-    <view>当前状态：{{currentStatus}}</view>
+
+    <view class="progress-line">
+      <text>今日打工进度 {{progress}}%</text>
+    </view>
+    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800" />
+
+    <view class="metrics">
+      <view>每秒收入：{{perSecond}}</view><view>已工作时长：{{workedDuration}}</view>
+      <view>距离下班：{{offWorkCountdown}}</view><view>当前状态：{{currentStatus}}</view>
+    </view>
     <view class="roast">{{roastText}}</view>
   </view>
 
@@ -24,15 +34,15 @@
 
   <view class="card quicks">
     <button class="btn-primary" bindtap="openExpensePopup">记一笔消费</button>
-    <button class="btn-secondary" bindtap="goSettlement">今日结算</button>
+    <button class="btn-secondary" bindtap="goSettlement">今日打工副本结算</button>
   </view>
 
   <view class="card overview">
-    <view class="title">今日概览</view>
+    <view class="title">今日回血情况</view>
     <view class="mini-grid">
-      <view>今日消费
+      <view>钱包伤害
 <text>{{todayExpense}}</text></view>
-      <view>今日净收入
+      <view>今日回血
 <text>{{netIncome}}</text></view>
       <view>摸鱼时长
 <text>{{fishDuration}}</text></view>

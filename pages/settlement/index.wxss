@@ -1,1 +1,4 @@
-view { margin-bottom: 12rpx; }
+@import "../../app.wxss";
+.result-top { background: linear-gradient(180deg, #fffdf6 0%, #ffffff 100%); border-color:#f0dfaa; }
+.persona { font-size: 30rpx; font-weight: 700; margin-bottom: 8rpx; }
+.actions .btn-secondary { margin-top: 10rpx; }
