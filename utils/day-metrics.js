@@ -1,5 +1,50 @@
 const ALL_STATUS = ['正常上班', '摸鱼中', '开会中', '假装忙', '崩溃中', '午休中', '加班中'];
 
+const MAIN_STATUS_POOL = {
+  stable: ['稳定续命中', '正常营业中', '平稳打工中', '稳定回血中', '安静搬砖中', '工位待机中'],
+  fishing: ['带薪摸鱼中', '工资套利中', '表面在线中', '假装很忙中', '灵魂离岗中', '身在工位心在远方中'],
+  meeting: ['会议包围中', '被会议消耗中', '认真参会表演中', '会议变现中', '一边听一边飘中'],
+  tired: ['靠意志上班中', '低电量续航中', '人还在岗中', '机械运转中', '强撑在线中'],
+  breakdown: ['情绪稳定崩溃中', '一边上班一边碎中', '表面冷静中', '精神重启中', '需求追杀中'],
+  overtime: ['加班献祭中', '下班遥遥无期中', '夜间搬砖中', '额外出卖时间中', '今日份延长营业中']
+};
+
+const COMMENT_POOL = [
+  '钱是赚到了一点，人也被消耗了一点。',
+  '今天还在稳定回血，先别急着崩。',
+  '老板买到了时间，但没完全买到灵魂。',
+  '今天打工不算白来，至少生活基金到账了一点。',
+  '工位已就位，灵魂加载中。',
+  '今天最大的成就，是没有当场离职。'
+];
+
+const DUNGEON_RESULT_POOL = ['顺利通关', '勉强通关', '稳定续命', '低耗过关', '惊险过关', '灵魂半离岗', '差点掉线', '打工保命成功', '还在坚持', '今日存活'];
+
+const WALLET_DAMAGE_POOL = {
+  safe: ['安全', '无伤通关', '今日保住了钱包', '消费克制中'],
+  light: ['轻度', '小额掉血', '情绪性消费轻微发生', '钱包轻轻受伤'],
+  medium: ['中度', '钱包开始掉血', '今日花钱有点认真', '小破财预警'],
+  heavy: ['重度', '钱包伤得不轻', '花钱像在泄压', '今天消费有点上头']
+};
+
+const TODAY_HARVEST_POOL = [
+  { min: 0, max: 20, lines: ['早餐基金到账', '豆浆油条有着落了', '煎饼果子努力中', '便利店小补给已解锁', '一杯矿泉水自由'] },
+  { min: 20, max: 40, lines: ['一杯美式到手', '奶茶预算已解锁', '咖啡续命成功', '下午茶资格到手', '甜品基金启动'] },
+  { min: 40, max: 80, lines: ['今日通勤已回本', '外卖配送费赚回来了', '午饭基金已到账', '打工没白来，午饭有了', '一顿简餐稳了'] },
+  { min: 80, max: 120, lines: ['一顿像样午饭到手', '奶茶加午饭安排上了', '今天吃饭不用心虚了', '工作餐自由已达成', '午饭 + 饮料双解锁'] },
+  { min: 120, max: 200, lines: ['下班外卖有着落了', '小烧烤基金启动', '电影票有戏了', '今天已经赚出一点快乐预算', '一顿像样晚饭问题不大'] },
+  { min: 200, max: 300, lines: ['奶茶自由稳了', '下班外卖自由达成', '周末一张电影票到手', '今天打工没白来', '快乐消费权限已开启'] },
+  { min: 300, max: 500, lines: ['下班小烧烤安排上', '小聚餐基金已到账', '报复性点外卖的底气有了', '今晚可以稍微对自己好一点', '一顿火锅的梦想正在靠近'] },
+  { min: 500, max: 800, lines: ['一顿火锅问题不大', '周末聚餐基金有了', '小购物预算已解锁', '今天打工开始有点成果了', '已经赚到一点像样的快乐了'] },
+  { min: 800, max: 1000, lines: ['一件小礼物可以安排了', '周末快乐预算达成', '小型报复性消费正在接近', '今天这班开始值点钱了', '快乐额度明显提升中'] },
+  { min: 1000, max: Infinity, lines: ['演唱会，冲！', 'Live 门票有戏了', '周末快乐基金拉满', '大件心愿开始靠近', '今天是真赚出点名堂了', '报复性消费底气已上线', '快乐预算明显膨胀中', '这班开始有点香了'] }
+];
+
+function pickRandom(list = [], fallback = '') {
+  if (!Array.isArray(list) || !list.length) return fallback;
+  return list[Math.floor(Math.random() * list.length)];
+}
+
 function toDateKey(input) {
   const d = new Date(input || Date.now());
   const y = d.getFullYear();
@@ -181,16 +226,31 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
   const fishingIndex = Math.min(100, Math.round((fishingSeconds / Math.max(1, workedSeconds)) * 100));
   const mentalLoss = Math.min(100, Math.round((((statusDurations['崩溃中'] || 0) + (statusDurations['加班中'] || 0)) / Math.max(1, workedMilliseconds)) * 130));
 
-  const personality = totalExpense > grossIncome * 0.5
-    ? '钱包漏风型打工人'
-    : overtimeSeconds > 7200
-      ? '加班献祭型战士'
-      : fishingSeconds > 7200
-        ? '摸鱼套利型牛马'
-        : '稳定续命型员工';
-  const conclusion = netIncome < 0
-    ? '今天属于倒贴上班，建议明天控制钱包冲动。'
-    : '钱是赚到了一点，人也被消耗了一点。';
+  const statusKey = overtimeSeconds > 7200
+    ? 'overtime'
+    : (statusDurations['崩溃中'] || 0) > 1800000
+      ? 'breakdown'
+      : meetingSeconds > 5400
+        ? 'meeting'
+        : fishingSeconds > 7200
+          ? 'fishing'
+          : mentalLoss > 65
+            ? 'tired'
+            : 'stable';
+  const personality = pickRandom(MAIN_STATUS_POOL[statusKey], '稳定续命中');
+  const conclusion = pickRandom(COMMENT_POOL, '钱是赚到了一点，人也被消耗了一点。');
+  const dungeonResult = pickRandom(DUNGEON_RESULT_POOL, '勉强通关');
+  const harvestTier = TODAY_HARVEST_POOL.find((tier) => grossIncome >= tier.min && grossIncome < tier.max) || TODAY_HARVEST_POOL[0];
+  const todayHarvest = pickRandom(harvestTier.lines, '早餐基金到账');
+
+  const walletDamagePool = totalExpense <= 0
+    ? WALLET_DAMAGE_POOL.safe
+    : totalExpense <= 50
+      ? WALLET_DAMAGE_POOL.light
+      : totalExpense <= 150
+        ? WALLET_DAMAGE_POOL.medium
+        : WALLET_DAMAGE_POOL.heavy;
+  const walletDamageLevel = pickRandom(walletDamagePool, '安全');
 
   console.log('[metrics salary]', {
     monthlySalary,
@@ -228,6 +288,9 @@ function computeTodayMetrics({ config = {}, dayState = {}, privacy = {}, now = D
     mentalLoss,
     personality,
     conclusion,
+    dungeonResult,
+    todayHarvest,
+    walletDamageLevel,
     privacy,
     settledAt
   };
