@@ -82,12 +82,12 @@ Page({
         badgeFontSize -= 1;
       } while (badgeFontSize >= 20);
 
-      ctx.fillStyle = '#ffd23f';
+      ctx.fillStyle = '#F2D34F';
       const badgeW = Math.max(130, Math.min(190, badgeTextWidth + 44));
       const badgeH = 46;
       const badgeX = cardX + cardW - 40 - badgeW;
       const badgeY = cardY + 45;
-      this.roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 23);
+      this.roundRect(ctx, badgeX, badgeY, badgeW, badgeH, 999);
       ctx.fill();
       ctx.fillStyle = '#111';
       ctx.font = `600 ${badgeFontSize}px sans-serif`;
@@ -100,12 +100,12 @@ Page({
       ctx.fillStyle = '#111';
       ctx.font = '900 64px sans-serif';
       ctx.fillText((metrics.mainStatusText || '稳定续命中').slice(0, 6), contentX, cardY + 244);
-      ctx.fillStyle = '#444';
+      ctx.fillStyle = '#555';
       this.wrapTextLines(ctx, metrics.conclusion, contentX, cardY + 286, contentW, 42, 2, '28px sans-serif');
 
       // 3. 今日战果卡
       const rewardY = cardY + 380;
-      ctx.fillStyle = '#fff4c8';
+      ctx.fillStyle = '#FFF4C8';
       this.roundRect(ctx, contentX, rewardY, contentW, 182, 24);
       ctx.fill();
       ctx.fillStyle = '#7a5a00';
@@ -117,51 +117,53 @@ Page({
 
       // 4. 指标卡片区（仅三项）
       const statY = rewardY + 214;
-      const cards = [
-        { label: '当前状态', value: metrics.currentStatus },
-        { label: '摸鱼指数', value: `${metrics.fishingIndex}/100` },
-        { label: '钱包伤害', value: metrics.walletDamageText }
-      ];
       const statGap = 16;
-      const statH = 98;
-      cards.forEach((item, idx) => {
-        const cardYPos = statY + idx * (statH + statGap);
-        ctx.fillStyle = '#fff';
-        this.roundRect(ctx, contentX, cardYPos, contentW, statH, 16);
-        ctx.fill();
-        ctx.strokeStyle = '#eee';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-        ctx.fillStyle = '#222';
-        ctx.font = '22px sans-serif';
-        ctx.fillText(item.label, contentX + 24, cardYPos + 36);
-        this.wrapTextLines(ctx, item.value, contentX + 24, cardYPos + 74, contentW - 48, 28, 1, '700 30px sans-serif');
-      });
+      const largeCardH = 120;
+      const smallCardH = 120;
+      const halfW = Math.floor((contentW - statGap) / 2);
+      this.drawMetricCard(ctx, contentX, statY, contentW, largeCardH, '当前状态', metrics.currentStatus);
+      this.drawMetricCard(ctx, contentX, statY + largeCardH + statGap, halfW, smallCardH, '摸鱼指数', `${metrics.fishingIndex}/100`);
+      this.drawMetricCard(ctx, contentX + halfW + statGap, statY + largeCardH + statGap, halfW, smallCardH, '钱包伤害', metrics.walletDamageText);
 
       // 5. 底部引导区（固定到底部）
-      const footerY = cardY + cardH - 170;
-      ctx.strokeStyle = '#ece7dd';
+      const footerY = cardY + cardH - 180;
+      ctx.strokeStyle = '#EDE7D8';
       ctx.beginPath();
       ctx.moveTo(contentX, footerY);
       ctx.lineTo(contentX + contentW, footerY);
       ctx.stroke();
-      ctx.fillStyle = '#111';
-      ctx.font = '700 26px sans-serif';
+      ctx.fillStyle = '#222';
+      ctx.font = '600 26px sans-serif';
       ctx.fillText('今天打工回血了吗？', contentX, footerY + 48);
-      ctx.fillStyle = '#666';
+      ctx.fillStyle = '#777';
       ctx.font = '22px sans-serif';
       ctx.fillText('看看你的牛马进度条', contentX, footerY + 84);
       const qrSize = 120;
       const qrX = contentX + contentW - qrSize;
       const qrY = footerY + 24;
-      ctx.strokeStyle = '#999';
+      ctx.strokeStyle = '#B5B5B5';
       ctx.lineWidth = 2;
       this.roundRect(ctx, qrX, qrY, qrSize, qrSize, 12);
+      ctx.setLineDash([8, 6]);
       ctx.stroke();
+      ctx.setLineDash([]);
       ctx.fillStyle = '#999';
-      ctx.font = '18px sans-serif';
+      ctx.font = '20px sans-serif';
       ctx.fillText('小程序码', qrX + 20, qrY + 66);
     });
+  },
+  drawMetricCard(ctx, x, y, w, h, label, value) {
+    ctx.fillStyle = '#FFFFFF';
+    this.roundRect(ctx, x, y, w, h, 20);
+    ctx.fill();
+    ctx.strokeStyle = '#EFEAE0';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = '#777';
+    ctx.font = '24px sans-serif';
+    ctx.fillText(label, x + 24, y + 42);
+    ctx.fillStyle = '#111';
+    this.wrapTextLines(ctx, value || '-', x + 24, y + 88, w - 48, 36, 1, '700 34px sans-serif');
   },
   roundRect(ctx, x, y, w, h, r) {
     ctx.beginPath();
