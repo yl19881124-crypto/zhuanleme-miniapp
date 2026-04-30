@@ -6,7 +6,7 @@
 
   <view wx:if="{{tab==='status'}}" class="card">
     <view class="title">今日状态累计时长</view>
-    <view wx:for="{{statusSummary}}" wx:key="name" class="row {{item.raw===0?'weak':''}}"><text>{{item.name}}</text><text>{{item.duration}}</text></view>
+    <view wx:for="{{statusSummary}}" wx:key="name" class="row {{item.raw===0?'weak':''}}"><text>{{item.name}}</text><text>{{item.duration}}（{{item.ratio}}）</text></view>
     <view class="subtle">摸鱼指数：{{fishIndex}} / 100</view>
     <view class="subtle">精神损耗：{{mental}} / 100</view>
     <view class="summary-line">今天公司买到了你的时间，但没完全买到效率。</view>

@@ -10,7 +10,7 @@
         <view class="subtle">今日已赚</view>
         <view class="hero-money">{{todayIncome}}</view>
       </view>
-      <view class="privacy-toggle" bindtap="togglePrivacy">{{hide.hideTodayIncome ? '🙈 隐私模式' : '👀 公开模式'}}</view>
+      <view class="privacy-toggle" bindtap="togglePrivacy">{{hideLabel}}</view>
     </view>
 
     <view class="progress-line">
