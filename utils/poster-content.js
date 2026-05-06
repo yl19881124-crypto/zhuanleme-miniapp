@@ -50,10 +50,10 @@ const BATTLE_REWARD_POOLS = [
 ];
 
 const WALLET_POOLS = {
-  safe: ['安全', '无伤通关', '消费克制'],
-  light: ['轻度', '小额掉血', '钱包轻伤'],
-  medium: ['中度', '钱包预警', '小破财'],
-  heavy: ['重度', '钱包告急', '上头消费']
+  safe: ['安全', '消费克制'],
+  light: ['轻度', '小额掉血'],
+  medium: ['中度', '钱包预警'],
+  heavy: ['重度', '钱包预警']
 };
 
 function hashSeed(seed = '') { let h = 2166136261; const s = String(seed); for (let i = 0; i < s.length; i += 1) { h ^= s.charCodeAt(i); h += (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24); } return (h >>> 0); }
