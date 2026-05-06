@@ -66,39 +66,70 @@ Page({
     this.drawRoundRect(ctx, mainX, mainY, mainW, mainH, 36, '#FFFDF8');
     ctx.restore();
 
-    this.drawTextBox(ctx, '赚了么', 75, 105, 220, { fontSize: 54, fontWeight: 900, color: '#111', maxLines: 1 });
-    this.drawRoundRect(ctx, 75, 122, 150, 8, 4, '#F2D34F');
-    this.drawPill(ctx, '老板可见版', 515, 72, 145, 50);
+    this.drawRoundRect(ctx, 70, 62, 610, 92, 24, '#FFFAED', '#121212');
+    this.drawRoundRect(ctx, 80, 72, 12, 72, 6, '#F2D34F');
+    this.drawTextBox(ctx, '赚了么', 104, 104, 260, { fontSize: 56, fontWeight: 900, color: '#111', maxLines: 1 });
+    this.drawRoundRect(ctx, 104, 124, 180, 9, 5, '#F2D34F');
+    this.drawPill(ctx, '老板可见版', 515, 82, 145, 50);
+    this.drawHandDrawSpark(ctx, 486, 95, 12, '#111');
 
-    this.drawTextBox(ctx, '今日打工状态', 75, 185, 300, { fontSize: 34, fontWeight: 800, color: '#111' });
-    this.drawTextBox(ctx, c.mainStatusText, 75, 275, 600, { fontSize: 82, fontWeight: 900, color: '#111', lineHeight: 88, maxLines: 1, ellipsis: true });
-    this.drawTextBox(ctx, c.conclusion, 75, 345, 590, { fontSize: 30, color: '#555', lineHeight: 42, maxLines: 2, ellipsis: true });
+    this.drawTextBox(ctx, '今日打工状态', 75, 205, 300, { fontSize: 32, fontWeight: 800, color: '#222' });
+    this.drawRoundRect(ctx, 70, 225, 610, 182, 26, '#FFFFFF', '#1A1A1A');
+    this.drawTextBox(ctx, c.mainStatusText, 95, 295, 560, { fontSize: 88, fontWeight: 900, color: '#111', lineHeight: 92, maxLines: 1, ellipsis: true });
+    this.drawTextBox(ctx, c.conclusion, 95, 356, 540, { fontSize: 30, color: '#4A4A4A', lineHeight: 42, maxLines: 1, ellipsis: true });
+    this.drawRoundRect(ctx, 95, 385, 170, 8, 4, '#F2D34F');
+    this.drawHandDrawSpark(ctx, 650, 280, 14, '#111');
 
-    this.drawRoundRect(ctx, 70, 435, 610, 190, 28, '#FFF1B8', '#F2D34F');
-    this.drawTextBox(ctx, '今日战果', 275, 485, 200, { fontSize: 32, fontWeight: 900, color: '#111', align: 'center' });
+    this.drawRoundRect(ctx, 70, 435, 610, 210, 28, '#FFE56A', '#111');
+    this.drawRoundRect(ctx, 88, 455, 574, 170, 20, 'rgba(255,255,255,0.25)');
+    this.drawTextBox(ctx, '🏆 今日战果', 255, 490, 240, { fontSize: 34, fontWeight: 900, color: '#111', align: 'center' });
     const rewardFontSize = (c.battleRewardText || '').length > 10 ? 40 : 46;
     const rewardLineHeight = (c.battleRewardText || '').length > 10 ? 50 : 56;
-    this.drawTextBox(ctx, c.battleRewardText, 115, 565, 520, { fontSize: rewardFontSize, fontWeight: 900, color: '#111', lineHeight: rewardLineHeight, maxLines: 2, align: 'center', ellipsis: true });
+    this.drawTextBox(ctx, c.battleRewardText, 112, 570, 526, { fontSize: rewardFontSize, fontWeight: 900, color: '#111', lineHeight: rewardLineHeight, maxLines: 2, align: 'center', ellipsis: true });
+    this.drawHandDrawSpark(ctx, 110, 510, 11, '#111');
+    this.drawHandDrawSpark(ctx, 640, 600, 11, '#111');
 
-    [70, 280, 490].forEach((x) => this.drawRoundRect(ctx, x, 660, 190, 170, 24, '#FFFFFF', '#EFE3C6'));
+    [70, 280, 490].forEach((x, idx) => {
+      this.drawRoundRect(ctx, x, 680, 190, 170, 24, '#FFFFFF', '#E0D5BD');
+      if (idx === 0) this.drawRoundRect(ctx, x + 12, 694, 28, 8, 4, '#F2D34F');
+      if (idx === 1) this.drawRoundRect(ctx, x + 12, 694, 28, 8, 4, '#111');
+      if (idx === 2) this.drawRoundRect(ctx, x + 12, 694, 28, 8, 4, '#F2D34F');
+    });
 
-    this.drawTextBox(ctx, '当前状态', 70, 710, 190, { fontSize: 24, color: '#666', align: 'center' });
-    this.drawTextBox(ctx, c.currentStatusText, 70, 780, 190, { fontSize: 42, fontWeight: 900, color: '#111', align: 'center', maxLines: 2, lineHeight: 46, ellipsis: true });
+    this.drawTextBox(ctx, '当前状态', 70, 730, 190, { fontSize: 24, color: '#666', align: 'center' });
+    this.drawTextBox(ctx, c.currentStatusText, 70, 800, 190, { fontSize: 42, fontWeight: 900, color: '#111', align: 'center', maxLines: 2, lineHeight: 46, ellipsis: true });
 
-    this.drawTextBox(ctx, '摸鱼指数', 280, 710, 190, { fontSize: 24, color: '#666', align: 'center' });
+    this.drawTextBox(ctx, '摸鱼指数', 280, 730, 190, { fontSize: 24, color: '#666', align: 'center' });
     const fishingSize = String(c.fishingIndexText || '').length > 6 ? 36 : 42;
-    this.drawTextBox(ctx, c.fishingIndexText, 280, 780, 190, { fontSize: fishingSize, fontWeight: 900, color: '#111', align: 'center', maxLines: 1, ellipsis: true });
+    this.drawTextBox(ctx, c.fishingIndexText, 280, 800, 190, { fontSize: fishingSize, fontWeight: 900, color: '#111', align: 'center', maxLines: 1, ellipsis: true });
 
-    this.drawTextBox(ctx, '钱包伤害', 490, 710, 190, { fontSize: 24, color: '#666', align: 'center' });
-    this.drawTextBox(ctx, c.walletDamageText, 490, 780, 190, { fontSize: 42, fontWeight: 900, color: '#111', align: 'center', maxLines: 2, lineHeight: 46, ellipsis: true });
+    this.drawTextBox(ctx, '钱包伤害', 490, 730, 190, { fontSize: 24, color: '#666', align: 'center' });
+    this.drawTextBox(ctx, c.walletDamageText, 490, 800, 190, { fontSize: 42, fontWeight: 900, color: '#111', align: 'center', maxLines: 2, lineHeight: 46, ellipsis: true });
 
-    this.drawRoundRect(ctx, 70, 875, 610, 155, 26, '#FFFDF8', '#F2D34F', [8, 8]);
-    this.drawTextBox(ctx, '📣', 100, 945, 50, { fontSize: 42, maxLines: 1 });
-    this.drawTextBox(ctx, c.ctaTitle, 160, 930, 340, { fontSize: 36, fontWeight: 900, color: '#111', maxLines: 1, ellipsis: true });
-    this.drawTextBox(ctx, c.ctaSubtitle, 160, 975, 340, { fontSize: 24, color: '#666', maxLines: 1, ellipsis: true });
+    this.drawRoundRect(ctx, 70, 885, 610, 145, 26, '#FFFDF8', '#111', [8, 8]);
+    this.drawTextBox(ctx, '📣', 98, 948, 50, { fontSize: 42, maxLines: 1 });
+    this.drawTextBox(ctx, c.ctaTitle, 160, 936, 340, { fontSize: 36, fontWeight: 900, color: '#111', maxLines: 1, ellipsis: true });
+    this.drawTextBox(ctx, c.ctaSubtitle, 160, 980, 340, { fontSize: 24, color: '#666', maxLines: 1, ellipsis: true });
 
     this.drawRoundRect(ctx, 555, 905, 105, 105, 16, '#FFFDF8', '#999', [6, 6]);
     this.drawTextBox(ctx, '小程序码', 555, 970, 105, { fontSize: 20, color: '#999', align: 'center', maxLines: 1 });
+  },
+  drawHandDrawSpark(ctx, x, y, size, color) {
+    ctx.save();
+    ctx.strokeStyle = color || '#111';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x - size, y);
+    ctx.lineTo(x + size, y);
+    ctx.moveTo(x, y - size);
+    ctx.lineTo(x, y + size);
+    ctx.moveTo(x - size * 0.65, y - size * 0.65);
+    ctx.lineTo(x + size * 0.65, y + size * 0.65);
+    ctx.moveTo(x + size * 0.65, y - size * 0.65);
+    ctx.lineTo(x - size * 0.65, y + size * 0.65);
+    ctx.stroke();
+    ctx.restore();
   },
   exportPoster(canvas, dpr) {
     wx.canvasToTempFilePath({
