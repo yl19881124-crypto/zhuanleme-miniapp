@@ -86,8 +86,8 @@ Page({
 
     this.roundRect(ctx, 20, 20, W - 40, H - 40, 36, '#fff');
 
-    this.roundRect(ctx, 530, 52, 170, 58, 28, '#f5c516');
-    this.text(ctx, '老板可见版', 615, 91, '700 36px sans-serif', '#111', 'center');
+    this.roundRect(ctx, 518, 52, 178, 58, 28, '#f5c516');
+    this.text(ctx, '老板可见版', 607, 91, '700 36px sans-serif', '#111', 'center');
 
     this.text(ctx, '赚了么', 62, 132, '900 86px sans-serif', '#101010');
     this.stroke(ctx, '#f5c516', 8, [[58, 154], [210, 136], [140, 158], [290, 158]]);
@@ -97,7 +97,7 @@ Page({
       fontSize: 34, fontWeight: 700, color: '#111', maxLines: 1, lineHeight: 40
     });
     this.drawTextBox(ctx, pickShortMainStatus(metrics.mainStatusText), 60, 265, 630, {
-      fontSize: 74, fontWeight: 900, color: '#090909', lineHeight: 82, maxLines: 1, ellipsis: true
+      fontSize: 76, fontWeight: 900, color: '#090909', lineHeight: 84, maxLines: 1, ellipsis: true
     });
     this.drawTextBox(ctx, metrics.conclusion, 60, 350, 610, {
       fontSize: 30, fontWeight: 400, color: '#111', lineHeight: 42, maxLines: 2, ellipsis: true
@@ -115,37 +115,28 @@ Page({
     });
     this.text(ctx, '🧋', 596, 736, '700 112px sans-serif', '#111', 'center');
 
-    this.metricCard(ctx, 46, 836, 206, 264, '📋', '当前状态', metrics.currentStatusText, {
-      labelX: 70, labelY: 690, labelSize: 24, labelMaxWidth: 170,
-      valueX: 70, valueY: 760, valueSize: 42, valueMaxWidth: 170, valueMaxLines: 2
+    this.metricCard(ctx, 46, 836, 194, 210, '📋', '今天打工回血了吗？', '看你的牛马进度条', {
+      labelX: 64, labelY: 902, labelSize: 24, labelMaxWidth: 156,
+      valueX: 64, valueY: 946, valueSize: 20, valueMaxWidth: 156, valueMaxLines: 1
     });
-    this.metricCard(ctx, 272, 836, 206, 264, '⏱', '摸鱼指数', metrics.fishingIndex, {
-      labelX: 285, labelY: 690, labelSize: 24, labelMaxWidth: 170,
-      valueX: 285, valueY: 760, valueSize: 40, valueMaxWidth: 170, valueMaxLines: 1
+    this.metricCard(ctx, 262, 836, 194, 210, '⏱', '', '', {
+      labelX: 280, labelY: 902, labelSize: 24, labelMaxWidth: 156,
+      valueX: 280, valueY: 946, valueSize: 20, valueMaxWidth: 156, valueMaxLines: 1
     });
-    this.metricCard(ctx, 498, 836, 206, 264, '🛡', '钱包伤害', metrics.walletDamageText, {
-      labelX: 500, labelY: 690, labelSize: 24, labelMaxWidth: 170,
-      valueX: 500, valueY: 760, valueSize: 38, valueMaxWidth: 170, valueMaxLines: 2
+    this.metricCard(ctx, 478, 836, 194, 210, '🛡', '小程序码', '', {
+      labelX: 496, labelY: 940, labelSize: 28, labelMaxWidth: 156,
+      valueX: 496, valueY: 960, valueSize: 20, valueMaxWidth: 156, valueMaxLines: 1
     });
 
     this.roundRect(ctx, 40, 1124, 670, 170, 28, '#fff', '#f5c516', [8, 10]);
     this.text(ctx, '📣', 76, 1226, '700 74px sans-serif', '#f5c516');
-    this.drawTextBox(ctx, '今天打工回血了吗？', 140, 910, 360, {
-      fontSize: 36, fontWeight: 900, color: '#111', maxLines: 1, lineHeight: 42, ellipsis: true
-    });
-    this.drawTextBox(ctx, '看看你的牛马进度条', 140, 955, 360, {
-      fontSize: 24, fontWeight: 400, color: '#111', maxLines: 1, lineHeight: 30, ellipsis: true
-    });
     this.roundRect(ctx, 548, 1144, 140, 130, 18, '#f8f8f8', '#cfcfcf', [6, 8]);
-    this.drawTextBox(ctx, '小程序码', 630, 940, 120, {
-      fontSize: 22, fontWeight: 500, color: '#999', align: 'center', maxLines: 1, lineHeight: 24
-    });
   },
   metricCard(ctx, x, y, w, h, icon, label, value, textOptions = {}) {
     this.roundRect(ctx, x, y, w, h, 22, '#fff', '#e6e6e6');
     this.text(ctx, icon, x + 30, y + 72, '700 56px sans-serif', '#111');
-    this.drawTextBox(ctx, label, textOptions.labelX, textOptions.labelY, textOptions.labelMaxWidth, {
-      fontSize: textOptions.labelSize, fontWeight: 600, color: '#111', align: 'center', maxLines: 1, lineHeight: 30
+    if (label) this.drawTextBox(ctx, label, textOptions.labelX, textOptions.labelY, textOptions.labelMaxWidth, {
+      fontSize: textOptions.labelSize, fontWeight: 600, color: '#111', align: 'center', maxLines: 2, lineHeight: 30
     });
     ctx.setLineDash([8, 8]);
     ctx.strokeStyle = '#f5c516';
@@ -154,11 +145,13 @@ Page({
     ctx.lineTo(x + w - 18, y + 150);
     ctx.stroke();
     ctx.setLineDash([]);
-    let fishingSize = textOptions.valueSize;
-    if (label === '摸鱼指数' && ctx.measureText(String(value)).width > textOptions.valueMaxWidth) fishingSize = 36;
-    this.drawTextBox(ctx, value, textOptions.valueX, textOptions.valueY, textOptions.valueMaxWidth, {
-      fontSize: fishingSize, fontWeight: 900, color: '#111', align: 'center', maxLines: textOptions.valueMaxLines, lineHeight: 44, ellipsis: true
-    });
+    if (value) {
+      let fishingSize = textOptions.valueSize;
+      if (label === '摸鱼指数' && ctx.measureText(String(value)).width > textOptions.valueMaxWidth) fishingSize = 36;
+      this.drawTextBox(ctx, value, textOptions.valueX, textOptions.valueY, textOptions.valueMaxWidth, {
+        fontSize: fishingSize, fontWeight: 500, color: '#666', align: 'center', maxLines: textOptions.valueMaxLines, lineHeight: 30, ellipsis: true
+      });
+    }
   },
   roundRect(ctx, x, y, w, h, r, fill, stroke, dash) {
     ctx.beginPath();
