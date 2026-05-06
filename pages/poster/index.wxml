@@ -1,6 +1,5 @@
 <view class="container">
   <view class="poster-wrap">
-    <image class="poster-debug-bg" src="/assets/poster/poster-bg.png" mode="widthFix" binderror="onDebugBgError"/>
     <image wx:if="{{posterImagePath}}" class="poster-preview" src="{{posterImagePath}}" mode="widthFix"/>
     <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
   </view>
