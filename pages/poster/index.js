@@ -6,12 +6,40 @@ const STATUS_LABEL_MAP = {
   开会中: '开会中', 假装忙: '假装忙', 崩溃中: '崩溃中', 午休中: '午休中', 加班中: '加班中', 收工: '已收工'
 };
 
+const MAIN_STATUS_POOL = ['稳住续命中', '摸鱼回血中', '打工续航中', '平稳搬砖中', '状态在线中', '能量回升中'];
+const WALLET_SHORT_MAP = {
+  安全: '安全',
+  轻度: '轻度',
+  中度: '中度',
+  重度: '重度',
+  消费克制: '消费克制',
+  小额掉血: '小额掉血',
+  钱包预警: '钱包预警'
+};
+
 function sanitizeMoneyText(text = '') {
   return String(text)
     .replace(/(¥|￥|\$)\s*\d+(?:\.\d+)?/gi, '***')
     .replace(/\d+(?:\.\d+)?\s*(元|块|块钱|人民币|RMB)/gi, '***')
     .replace(/赚了\s*\d+(?:\.\d+)?/gi, '赚了***')
     .replace(/亏了\s*\d+(?:\.\d+)?/gi, '亏了***');
+}
+
+function countZhChars(text = '') {
+  const matched = String(text).match(/[\u4e00-\u9fa5]/g);
+  return matched ? matched.length : 0;
+}
+
+function pickShortMainStatus(text = '') {
+  if (countZhChars(text) <= 6) return text;
+  return MAIN_STATUS_POOL[Math.floor(Math.random() * MAIN_STATUS_POOL.length)];
+}
+
+function toWalletShortValue(text = '') {
+  const raw = String(text).trim();
+  if (WALLET_SHORT_MAP[raw]) return WALLET_SHORT_MAP[raw];
+  const found = Object.keys(WALLET_SHORT_MAP).find((key) => raw.includes(key));
+  return found ? WALLET_SHORT_MAP[found] : '钱包预警';
 }
 
 Page({
@@ -27,7 +55,7 @@ Page({
         battleRewardText: sanitizeMoneyText(metrics.battleRewardText || metrics.todayHarvest || '奶茶自由达成'),
         currentStatusText: sanitizeMoneyText(STATUS_LABEL_MAP[metrics.currentStatusText || metrics.currentStatus] || '摸鱼中'),
         fishingIndex: `${Math.min(100, Math.max(0, Number(metrics.fishingIndex) || 62))}/100`,
-        walletDamageText: sanitizeMoneyText(metrics.walletDamageText || metrics.walletDamageLevel || '安全'),
+        walletDamageText: toWalletShortValue(sanitizeMoneyText(metrics.walletDamageText || metrics.walletDamageLevel || '安全')),
         footerGuide: sanitizeMoneyText('长按看看你的牛马进度条')
       }
     });
@@ -65,32 +93,60 @@ Page({
     this.stroke(ctx, '#f5c516', 8, [[58, 154], [210, 136], [140, 158], [290, 158]]);
     this.text(ctx, '★', 294, 170, '700 42px sans-serif', '#f5c516');
 
-    this.text(ctx, '今日打工状态', 62, 255, '700 56px sans-serif', '#111');
-    this.text(ctx, metrics.mainStatusText, 62, 390, '900 126px sans-serif', '#090909');
-    this.text(ctx, metrics.conclusion, 62, 515, '500 52px sans-serif', '#111');
+    this.drawTextBox(ctx, '今日打工状态', 60, 180, 400, {
+      fontSize: 34, fontWeight: 700, color: '#111', maxLines: 1, lineHeight: 40
+    });
+    this.drawTextBox(ctx, pickShortMainStatus(metrics.mainStatusText), 60, 265, 630, {
+      fontSize: 74, fontWeight: 900, color: '#090909', lineHeight: 82, maxLines: 1, ellipsis: true
+    });
+    this.drawTextBox(ctx, metrics.conclusion, 60, 350, 610, {
+      fontSize: 30, fontWeight: 400, color: '#111', lineHeight: 42, maxLines: 2, ellipsis: true
+    });
 
     this.roundRect(ctx, 40, 560, 670, 240, 30, '#fff9dd', '#f0d36a');
-    this.roundRect(ctx, 268, 592, 210, 56, 14, '#f5c516');
-    this.text(ctx, '今日战果', 373, 632, '800 52px sans-serif', '#111', 'center');
+    this.drawTextBox(ctx, '今日战果', 375, 462, 200, {
+      fontSize: 32, fontWeight: 800, color: '#111', align: 'center', maxLines: 1, lineHeight: 38
+    });
     this.text(ctx, '🏆', 94, 725, '700 116px sans-serif', '#f5c516');
-    this.text(ctx, metrics.battleRewardText, 220, 740, '900 84px sans-serif', '#111');
+    const rewardFontSize = countZhChars(metrics.battleRewardText) > 10 ? 38 : 44;
+    const rewardLineHeight = rewardFontSize === 38 ? 48 : 54;
+    this.drawTextBox(ctx, metrics.battleRewardText, 155, 535, 470, {
+      fontSize: rewardFontSize, fontWeight: 900, color: '#111', lineHeight: rewardLineHeight, maxLines: 2, ellipsis: true
+    });
     this.text(ctx, '🧋', 596, 736, '700 112px sans-serif', '#111', 'center');
 
-    this.metricCard(ctx, 46, 836, 206, 264, '📋', '当前状态', metrics.currentStatusText);
-    this.metricCard(ctx, 272, 836, 206, 264, '⏱', '摸鱼指数', metrics.fishingIndex);
-    this.metricCard(ctx, 498, 836, 206, 264, '🛡', '钱包伤害', metrics.walletDamageText);
+    this.metricCard(ctx, 46, 836, 206, 264, '📋', '当前状态', metrics.currentStatusText, {
+      labelX: 70, labelY: 690, labelSize: 24, labelMaxWidth: 170,
+      valueX: 70, valueY: 760, valueSize: 42, valueMaxWidth: 170, valueMaxLines: 2
+    });
+    this.metricCard(ctx, 272, 836, 206, 264, '⏱', '摸鱼指数', metrics.fishingIndex, {
+      labelX: 285, labelY: 690, labelSize: 24, labelMaxWidth: 170,
+      valueX: 285, valueY: 760, valueSize: 40, valueMaxWidth: 170, valueMaxLines: 1
+    });
+    this.metricCard(ctx, 498, 836, 206, 264, '🛡', '钱包伤害', metrics.walletDamageText, {
+      labelX: 500, labelY: 690, labelSize: 24, labelMaxWidth: 170,
+      valueX: 500, valueY: 760, valueSize: 38, valueMaxWidth: 170, valueMaxLines: 2
+    });
 
     this.roundRect(ctx, 40, 1124, 670, 170, 28, '#fff', '#f5c516', [8, 10]);
     this.text(ctx, '📣', 76, 1226, '700 74px sans-serif', '#f5c516');
-    this.text(ctx, '今天打工回血了吗？', 192, 1199, '800 64px sans-serif', '#111');
-    this.text(ctx, metrics.footerGuide, 192, 1260, '500 44px sans-serif', '#111');
+    this.drawTextBox(ctx, '今天打工回血了吗？', 140, 910, 360, {
+      fontSize: 36, fontWeight: 900, color: '#111', maxLines: 1, lineHeight: 42, ellipsis: true
+    });
+    this.drawTextBox(ctx, '看看你的牛马进度条', 140, 955, 360, {
+      fontSize: 24, fontWeight: 400, color: '#111', maxLines: 1, lineHeight: 30, ellipsis: true
+    });
     this.roundRect(ctx, 548, 1144, 140, 130, 18, '#f8f8f8', '#cfcfcf', [6, 8]);
-    this.text(ctx, '小程序码', 618, 1222, '500 36px sans-serif', '#9c9c9c', 'center');
+    this.drawTextBox(ctx, '小程序码', 630, 940, 120, {
+      fontSize: 22, fontWeight: 500, color: '#999', align: 'center', maxLines: 1, lineHeight: 24
+    });
   },
-  metricCard(ctx, x, y, w, h, icon, label, value) {
+  metricCard(ctx, x, y, w, h, icon, label, value, textOptions = {}) {
     this.roundRect(ctx, x, y, w, h, 22, '#fff', '#e6e6e6');
     this.text(ctx, icon, x + 30, y + 72, '700 56px sans-serif', '#111');
-    this.text(ctx, label, x + 24, y + 130, '600 36px sans-serif', '#111');
+    this.drawTextBox(ctx, label, textOptions.labelX, textOptions.labelY, textOptions.labelMaxWidth, {
+      fontSize: textOptions.labelSize, fontWeight: 600, color: '#111', align: 'center', maxLines: 1, lineHeight: 30
+    });
     ctx.setLineDash([8, 8]);
     ctx.strokeStyle = '#f5c516';
     ctx.beginPath();
@@ -98,7 +154,11 @@ Page({
     ctx.lineTo(x + w - 18, y + 150);
     ctx.stroke();
     ctx.setLineDash([]);
-    this.wrapText(ctx, value, x + 22, y + 212, w - 40, 50, 2, '900 66px sans-serif', '#111');
+    let fishingSize = textOptions.valueSize;
+    if (label === '摸鱼指数' && ctx.measureText(String(value)).width > textOptions.valueMaxWidth) fishingSize = 36;
+    this.drawTextBox(ctx, value, textOptions.valueX, textOptions.valueY, textOptions.valueMaxWidth, {
+      fontSize: fishingSize, fontWeight: 900, color: '#111', align: 'center', maxLines: textOptions.valueMaxLines, lineHeight: 44, ellipsis: true
+    });
   },
   roundRect(ctx, x, y, w, h, r, fill, stroke, dash) {
     ctx.beginPath();
@@ -139,20 +199,38 @@ Page({
     ctx.fillText(t, x, y);
     ctx.textAlign = 'left';
   },
-  wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines, font, color) {
-    ctx.font = font;
+  drawTextBox(ctx, text, x, y, maxWidth, options = {}) {
+    const {
+      fontSize = 30,
+      fontWeight = 400,
+      color = '#111',
+      lineHeight = 36,
+      maxLines = 1,
+      align = 'left',
+      ellipsis = false
+    } = options;
+    ctx.font = `${fontWeight} ${fontSize}px sans-serif`;
     ctx.fillStyle = color;
+    ctx.textAlign = align;
     const lines = [];
     let line = '';
-    for (let i = 0; i < String(text).length; i += 1) {
-      const next = line + String(text)[i];
+    const chars = String(text || '');
+    for (let i = 0; i < chars.length; i += 1) {
+      const next = line + chars[i];
       if (ctx.measureText(next).width > maxWidth && line) {
         lines.push(line);
-        line = String(text)[i];
+        line = chars[i];
       } else line = next;
     }
     if (line) lines.push(line);
-    lines.slice(0, maxLines).forEach((item, idx) => ctx.fillText(item, x, y + idx * lineHeight));
+    let output = lines.slice(0, maxLines);
+    if (ellipsis && lines.length > maxLines && output.length) {
+      let last = output[output.length - 1];
+      while (last && ctx.measureText(`${last}…`).width > maxWidth) last = last.slice(0, -1);
+      output[output.length - 1] = `${last}…`;
+    }
+    output.forEach((item, idx) => ctx.fillText(item, x, y + idx * lineHeight));
+    ctx.textAlign = 'left';
   },
   updatePreviewImage(canvas, w, h) {
     wx.canvasToTempFilePath({
