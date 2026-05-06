@@ -1,6 +1,7 @@
 <view class="container">
   <view class="poster-wrap">
-    <image wx:if="{{posterImagePath}}" class="poster-preview" src="{{posterImagePath}}" mode="widthFix"/>
+    <image wx:if="{{posterImagePath}}" src="{{posterImagePath}}" mode="widthFix" class="poster-preview"/>
+    <view wx:else class="loading">海报生成中...</view>
     <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
   </view>
 
