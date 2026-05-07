@@ -68,7 +68,7 @@ Page({
 
     this.drawTextBox(ctx, '赚了么', 75, 105, 220, { fontSize: 56, fontWeight: 900, color: '#111111', maxLines: 1 });
     this.drawHandUnderline(ctx, 76, 130, 172, '#F2D34F');
-    this.drawTextBox(ctx, '✦', 258, 96, 20, { fontSize: 22, color: '#F2D34F' });
+    this.drawSparkle(ctx, 268, 104, '#F2D34F');
     this.drawPill(ctx, '老板可见版', 504, 72, 156, 50);
 
     this.drawTextBox(ctx, '今日打工状态', 75, 190, 300, { fontSize: 32, fontWeight: 800, color: '#111111' });
@@ -82,32 +82,27 @@ Page({
     ctx.shadowOffsetY = 4;
     this.drawRoundRect(ctx, 70, 448, 610, 188, 26, '#F2D34F', '#E3C240');
     ctx.restore();
-    this.drawTextBox(ctx, '✦ 今日战果', 102, 495, 220, { fontSize: 28, fontWeight: 800, color: '#111111', maxLines: 1 });
+    this.drawTextBox(ctx, '今日战果', 102, 495, 220, { fontSize: 28, fontWeight: 800, color: '#111111', maxLines: 1 });
     const rewardFontSize = (c.battleRewardText || '').length > 10 ? 46 : 52;
     this.drawTextBox(ctx, c.battleRewardText, 102, 568, 500, { fontSize: rewardFontSize, fontWeight: 900, color: '#111111', lineHeight: 56, maxLines: 2, ellipsis: true });
-    this.drawTextBox(ctx, '🏆', 612, 502, 44, { fontSize: 34, align: 'center' });
-    this.drawTextBox(ctx, '✨', 610, 548, 44, { fontSize: 26, align: 'center' });
+    this.drawDotCluster(ctx, 628, 520, '#111111');
 
     const cardXs = [70, 280, 490];
     cardXs.forEach((x) => this.drawRoundRect(ctx, x, 660, 190, 170, 22, '#FFFFFF', '#E9DFC7'));
 
-    this.drawTextBox(ctx, '🪪', 86, 698, 30, { fontSize: 24 });
     this.drawTextBox(ctx, '当前状态', 70, 718, 190, { fontSize: 23, color: '#666666', align: 'center' });
     this.drawTextBox(ctx, c.currentStatusText, 70, 786, 190, { fontSize: 40, fontWeight: 900, color: '#111111', align: 'center', maxLines: 2, lineHeight: 44, ellipsis: true });
 
-    this.drawTextBox(ctx, '🕒', 296, 698, 30, { fontSize: 24 });
     this.drawTextBox(ctx, '摸鱼指数', 280, 718, 190, { fontSize: 23, color: '#666666', align: 'center' });
     const fishingSize = String(c.fishingIndexText || '').length > 6 ? 34 : 42;
     this.drawTextBox(ctx, c.fishingIndexText, 280, 786, 190, { fontSize: fishingSize, fontWeight: 900, color: '#111111', align: 'center', maxLines: 1, ellipsis: true });
 
-    this.drawTextBox(ctx, '🛡', 506, 698, 30, { fontSize: 24 });
     this.drawTextBox(ctx, '钱包伤害', 490, 718, 190, { fontSize: 23, color: '#666666', align: 'center' });
     this.drawTextBox(ctx, c.walletDamageText, 490, 786, 190, { fontSize: 40, fontWeight: 900, color: '#111111', align: 'center', maxLines: 2, lineHeight: 44, ellipsis: true });
 
     this.drawRoundRect(ctx, 70, 875, 610, 155, 24, '#FFFDF8', '#E9DFC7');
     this.drawRoundRect(ctx, 84, 889, 408, 127, 18, '#FFFDF8', '#F2D34F', [8, 7]);
-    this.drawTextBox(ctx, '📣', 102, 948, 46, { fontSize: 38, maxLines: 1 });
-    this.drawTextBox(ctx, c.ctaTitle, 154, 934, 330, { fontSize: 36, fontWeight: 900, color: '#111111', maxLines: 1, ellipsis: true });
+    this.drawTextBox(ctx, c.ctaTitle, 102, 934, 382, { fontSize: 36, fontWeight: 900, color: '#111111', maxLines: 1, ellipsis: true });
     this.drawTextBox(ctx, `→ ${c.ctaSubtitle}`, 154, 978, 330, { fontSize: 24, color: '#666666', maxLines: 1, ellipsis: true });
 
     this.drawRoundRect(ctx, 520, 900, 140, 110, 18, '#FFFFFF', '#D4D4D4', [6, 6]);
@@ -123,6 +118,30 @@ Page({
     ctx.quadraticCurveTo(x + w * 0.4, y + 7, x + w * 0.75, y + 1);
     ctx.quadraticCurveTo(x + w * 0.9, y - 2, x + w, y + 2);
     ctx.stroke();
+    ctx.restore();
+  },
+
+  drawSparkle(ctx, cx, cy, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(cx - 8, cy);
+    ctx.lineTo(cx + 8, cy);
+    ctx.moveTo(cx, cy - 8);
+    ctx.lineTo(cx, cy + 8);
+    ctx.stroke();
+    ctx.restore();
+  },
+  drawDotCluster(ctx, x, y, color) {
+    ctx.save();
+    ctx.fillStyle = color;
+    [[0,0,4],[14,8,3],[-10,14,2]].forEach(([dx,dy,r]) => {
+      ctx.beginPath();
+      ctx.arc(x + dx, y + dy, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
     ctx.restore();
   },
   exportPoster(canvas, dpr) {

@@ -25,7 +25,7 @@ Page({
       mental: metrics.mentalLoss,
       persona: posterContent.mainStatusText,
       roast: posterContent.conclusion,
-      result: metrics.dungeonResultText || metrics.dungeonResult || '勉强通关',
+      result: posterContent.dungeonResultText || metrics.dungeonResultText || metrics.dungeonResult || '勉强通关',
       battleRewardText: posterContent.battleRewardText
     });
   },
