@@ -26,7 +26,7 @@
     <view class="title">情绪概览</view>
     <view>摸鱼指数：{{fishIndex}}</view>
     <view>精神损耗：{{mental}}</view>
-    <view>当前状态文案：{{persona}}</view>
+    <view>今日状态：{{persona}}</view>
   </view>
 
   <view class="card">

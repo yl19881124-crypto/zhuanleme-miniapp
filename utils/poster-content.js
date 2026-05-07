@@ -90,7 +90,18 @@ function buildPosterContent(metrics = {}) {
   const dateKey = metrics.dateKey || '';
   const baseSeed = `${dateKey}${mainStatusCategory}${battleRewardLevel}`;
 
-  const mainStatusText = seededPick(MAIN_STATUS_POOL[mainStatusCategory], `${baseSeed}:main`).slice(0, 6);
+  const isOpeningState = (metrics.workedSeconds || 0) <= 60 || (metrics.earnedToday || 0) <= 0;
+  const openingMainPool = ['开局回血中', '副本启动中', '工位加载中'];
+  const openingResultPool = ['副本未开始', '刚刚开局', '等待开工'];
+  const defaultResultPool = ['稳定续命', '勉强通关', '惊险过关', '顺利通关'];
+
+  const mainStatusText = (isOpeningState
+    ? seededPick(openingMainPool, `${baseSeed}:opening-main`)
+    : seededPick(MAIN_STATUS_POOL[mainStatusCategory], `${baseSeed}:main`)).slice(0, 6);
+  const dungeonResultText = isOpeningState
+    ? seededPick(openingResultPool, `${baseSeed}:opening-result`)
+    : seededPick(defaultResultPool, `${baseSeed}:dungeon-result`);
+
   return {
     mainStatusText,
     mainStatusCategory,
@@ -101,7 +112,8 @@ function buildPosterContent(metrics = {}) {
     fishingIndexText: `${Math.max(0, Math.min(100, Math.round(metrics.fishingIndex || 0)))}/100`,
     walletDamageText: seededPick(WALLET_POOLS[walletLevel], `${baseSeed}:wallet`),
     ctaTitle: '今天打工回血了吗？',
-    ctaSubtitle: '看看你的牛马进度条'
+    ctaSubtitle: '看看你的牛马进度条',
+    dungeonResultText
   };
 }
 
