@@ -45,8 +45,8 @@
   </view>
 
   <view class="home-actions">
-    <button class="home-action-btn primary-action" bindtap="openExpensePopup">记录消费</button>
-    <button class="home-action-btn secondary-action" bindtap="goSettlement">每日结算</button>
+    <view class="home-action-btn primary-action" bindtap="openExpensePopup">记录消费</view>
+    <view class="home-action-btn secondary-action" bindtap="goSettlement">每日结算</view>
   </view>
 
   <view wx:if="{{showExpensePopup}}" class="popup-mask" bindtap="closeExpensePopup">
