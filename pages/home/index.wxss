@@ -1,6 +1,6 @@
 @import "../../app.wxss";
 
-.home-page { padding-bottom: calc(220rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.home-page { padding-bottom: calc(120rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
 .brand-bar { height: 88rpx; display:flex; align-items:center; justify-content:space-between; border-bottom:4rpx solid #111111; margin-bottom: 20rpx; }
 .brand-name { font-size: 40rpx; font-weight: 900; }
 .privacy-toggle { background:#FFFFFF; }
@@ -33,9 +33,10 @@
 .gain-card .duo-title { color: #756800; }
 .gain-card .duo-value { color: #111111; }
 
-.btn-group { display:flex; flex-direction:column; gap: 20rpx; }
-.actions { width: 100%; padding: 0; margin-top: 24rpx; }
-.action-btn { width: 100%; height: 88rpx; display:flex; align-items:center; justify-content:center; box-sizing:border-box; border: 4rpx solid #111111; border-radius: 18rpx; box-shadow: 6rpx 6rpx 0 #111111; font-size: 30rpx; font-weight: 900; padding: 0; margin: 0; }
+.home-actions { width: 100%; display: flex; flex-direction: column; gap: 20rpx; margin-top: 24rpx; box-sizing: border-box; }
+.home-action-btn { width: 100%; height: 88rpx; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 4rpx solid #111111; border-radius: 18rpx; box-shadow: 6rpx 6rpx 0 #111111; font-size: 30rpx; font-weight: 900; padding: 0; margin: 0; }
+.primary-action { background: #FFD400; color: #111111; }
+.secondary-action { background: #FFFFFF; color: #111111; }
 
 .popup-mask { position:fixed; inset:0; background:rgba(0,0,0,.45); display:flex; align-items:flex-end; z-index:9999; }
 .popup { width:100%; border-radius: 24rpx 24rpx 0 0; padding: 24rpx; background:#FFFFFF; }
