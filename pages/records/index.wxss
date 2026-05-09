@@ -1,8 +1,165 @@
 @import "../../app.wxss";
-.tabs { display:flex; padding: 0; overflow: hidden; }
-.tab { flex:1; text-align:center; padding: 20rpx; }
-.active { background:#111; color:#f7c948; font-weight: 600; }
-.row { display:flex; justify-content:space-between; margin: 12rpx 0; }
-.weak { color:#a5a5a5; }
-.summary-line { margin-top: 14rpx; background:#fff9e8; border:1px solid #f4db8a; padding: 14rpx; border-radius: 10rpx; color:#6d5500; }
-.expense-item { padding: 12rpx 0; border-bottom: 1px solid #eee; }
+
+.records-page {
+  padding: 24rpx;
+  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.records-tabs {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 22rpx 0;
+  font-size: 30rpx;
+  font-weight: 900;
+  border: 5rpx solid #111;
+  border-radius: 24rpx;
+  background: #f4f4f4;
+  box-shadow: 8rpx 8rpx 0 #111;
+  color: #4e4527;
+}
+
+.tab-item.active {
+  background: #ffd900;
+  color: #5a4b00;
+}
+
+.metric-grid {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 24rpx;
+}
+
+.metric-card,
+.block-card {
+  background: #fff;
+  border: 5rpx solid #111;
+  border-radius: 24rpx;
+  box-shadow: 8rpx 8rpx 0 #111;
+}
+
+.metric-card {
+  flex: 1;
+  padding: 26rpx;
+}
+
+.metric-label {
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #403813;
+}
+
+.metric-value {
+  font-size: 56rpx;
+  line-height: 1.2;
+  font-weight: 900;
+  margin: 20rpx 0 8rpx;
+}
+
+.metric-fish { color: #121212; }
+.metric-mental { color: #c4161c; }
+
+.metric-desc {
+  font-size: 26rpx;
+  color: #5f5530;
+  font-weight: 700;
+}
+
+.time-card {
+  padding: 30rpx;
+}
+
+.block-title {
+  font-size: 44rpx;
+  font-weight: 900;
+  color: #111;
+  margin-bottom: 24rpx;
+}
+
+.time-item + .time-item {
+  margin-top: 18rpx;
+}
+
+.time-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.time-name { font-size: 34rpx; color: #1b1b1b; }
+.time-value { font-size: 36rpx; font-weight: 900; color: #111; }
+
+.time-track {
+  height: 22rpx;
+  border: 4rpx solid #111;
+  border-radius: 999rpx;
+  background: #ececec;
+  overflow: hidden;
+}
+
+.time-fill { height: 100%; border-radius: 999rpx; }
+
+.roast {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 4rpx solid #111;
+  font-size: 26rpx;
+  color: #605938;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.expense-view .block-card + .block-card {
+  margin-top: 20rpx;
+}
+
+.expense-item,
+.empty-card {
+  padding: 26rpx;
+}
+
+.expense-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.expense-category {
+  font-size: 32rpx;
+  font-weight: 900;
+  color: #181818;
+}
+
+.expense-amount {
+  font-size: 40rpx;
+  font-weight: 900;
+  color: #c4161c;
+}
+
+.expense-remark {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: #3f3f3f;
+}
+
+.expense-meta {
+  margin-top: 12rpx;
+  display: flex;
+  justify-content: space-between;
+  gap: 12rpx;
+  font-size: 24rpx;
+  color: #6c6c6c;
+}
+
+.empty-card {
+  font-size: 28rpx;
+  text-align: center;
+  color: #4f4f4f;
+}
