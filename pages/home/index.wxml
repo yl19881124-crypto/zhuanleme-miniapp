@@ -17,6 +17,7 @@
 
   <view class="status-grid">
     <view wx:for="{{statusCards}}" wx:key="value" class="status-item {{currentStatus===item.value?'active':''}}" data-status="{{item.value}}" bindtap="chooseStatus">
+      <view class="status-icon">{{item.icon}}</view>
       <view class="status-text">{{item.label}}</view>
     </view>
   </view>
