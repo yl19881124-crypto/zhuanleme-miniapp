@@ -2,7 +2,7 @@
 
 .records-page {
   padding: 24rpx;
-  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(108rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 
