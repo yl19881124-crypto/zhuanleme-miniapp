@@ -15,7 +15,8 @@ App({
         hideSalary: true,
         hideTodayIncome: true,
         hideNetIncome: true,
-        maskOnShare: true
+        maskOnShare: true,
+        desensitizeData: true
       });
     }
   }

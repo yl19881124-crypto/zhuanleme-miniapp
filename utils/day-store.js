@@ -2,7 +2,7 @@ const { computeTodayMetrics, toDateKey } = require('./day-metrics');
 
 const STORAGE_KEYS = {
   CONFIG: 'salary_config',
-  PRIVACY: 'privacy_settings'
+  PRIVACY: 'privacyConfig'
 };
 
 const DEFAULT_CONFIG = {
@@ -50,7 +50,6 @@ function getConfig() {
   const fromSalaryConfig = getStorage(STORAGE_KEYS.CONFIG, null);
   const fromLegacyProfile = getStorage('userProfile', null);
   const config = normalizeConfig(fromSalaryConfig || fromLegacyProfile || DEFAULT_CONFIG);
-  console.log('[config]', config);
   return config;
 }
 
@@ -73,9 +72,26 @@ function saveConfig(config) {
   }
 }
 
-function getPrivacy() { return getStorage(STORAGE_KEYS.PRIVACY, { hideTodayIncome: false, maskOnShare: true }); }
+const DEFAULT_PRIVACY = {
+  hideSalary: true,
+  hideTodayIncome: true,
+  hideNetIncome: true,
+  maskOnShare: true,
+  desensitizeData: true
+};
 
-function savePrivacy(privacy) { setStorage(STORAGE_KEYS.PRIVACY, privacy); }
+function getPrivacy() {
+  const privacy = getStorage(STORAGE_KEYS.PRIVACY, null)
+    || getStorage('privacy_settings', null)
+    || DEFAULT_PRIVACY;
+  return { ...DEFAULT_PRIVACY, ...privacy };
+}
+
+function savePrivacy(privacy) {
+  const merged = { ...DEFAULT_PRIVACY, ...(privacy || {}) };
+  setStorage(STORAGE_KEYS.PRIVACY, merged);
+  setStorage('privacy_settings', merged);
+}
 
 function dayKey(dateKey) { return `day_state_${dateKey}`; }
 
@@ -147,6 +163,7 @@ function clearTodayRecords(now = Date.now()) {
 module.exports = {
   STORAGE_KEYS,
   DEFAULT_CONFIG,
+  DEFAULT_PRIVACY,
   getConfig,
   saveConfig,
   getPrivacy,

@@ -1,7 +1,7 @@
-const { KEYS, get, set } = require('../../utils/storage');
-const { getConfig, saveConfig } = require('../../utils/day-store');
+const { KEYS, set } = require('../../utils/storage');
+const { getConfig, saveConfig, getPrivacy, savePrivacy, DEFAULT_PRIVACY, clearTodayRecords } = require('../../utils/day-store');
 
-const defaultPrivacy = { hideSalary: false, hideTodayIncome: false, hideNetIncome: false, maskOnShare: true };
+const defaultPrivacy = DEFAULT_PRIVACY;
 
 Page({
   data: {
@@ -10,7 +10,7 @@ Page({
   },
   onShow() {
     const config = getConfig();
-    this.setData({ profile: { ...this.data.profile, ...config }, privacy: get(KEYS.PRIVACY, defaultPrivacy) });
+    this.setData({ profile: { ...this.data.profile, ...config }, privacy: getPrivacy() });
     const tabBar = this.getTabBar && this.getTabBar();
     if (tabBar && tabBar.updateSelected) tabBar.updateSelected();
   },
@@ -38,10 +38,22 @@ Page({
     if (key === 'hideTodayIncome' && next) privacy.hideSalary = true;
     if (key === 'hideTodayIncome' && !next) privacy.hideSalary = false;
     this.setData({ privacy });
-    set(KEYS.PRIVACY, privacy);
+    savePrivacy(privacy);
   },
-  clearToday() { set(KEYS.STATUS_LOGS, []); set(KEYS.EXPENSE_LOGS, []); wx.showToast({ title: '今日记录已清空', icon: 'success' }); },
-  resetAll() { wx.clearStorageSync(); set(KEYS.PRIVACY, defaultPrivacy); wx.showToast({ title: '已重置', icon: 'success' }); },
+  clearToday() {
+    wx.showModal({
+      title: '确认清空',
+      content: '确认清空今日战利品吗？',
+      success: (res) => {
+        if (!res.confirm) return;
+        clearTodayRecords();
+        set(KEYS.STATUS_LOGS, []);
+        set(KEYS.EXPENSE_LOGS, []);
+        wx.showToast({ title: '今日记录已清空', icon: 'success' });
+      }
+    });
+  },
+  resetAll() { wx.clearStorageSync(); savePrivacy(defaultPrivacy); wx.showToast({ title: '已重置', icon: 'success' }); },
   exportData() { wx.showToast({ title: '导出功能占位', icon: 'none' }); },
   goPlan() { wx.navigateTo({ url: '/pages/plan/index' }); }
 });
