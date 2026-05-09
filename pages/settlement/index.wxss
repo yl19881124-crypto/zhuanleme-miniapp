@@ -1,7 +1,7 @@
 @import "../../app.wxss";
 
 .settlement-page {
-  padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
+  padding-bottom: calc(120rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
 }
 

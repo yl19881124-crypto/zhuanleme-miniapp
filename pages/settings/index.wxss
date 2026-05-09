@@ -1,7 +1,7 @@
 @import "../../app.wxss";
 
 .settings-page {
-  padding: 58rpx 24rpx calc(140rpx + env(safe-area-inset-bottom));
+  padding: 58rpx 24rpx calc(120rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
   background: #efefef;
 }
