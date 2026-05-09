@@ -1,0 +1,23 @@
+/* Stitch 统一设计基线（V2） */
+
+/* color */
+.st-bg-page { background: #f5f6f8; }
+.st-card-bg { background: #ffffff; }
+.st-border { border-color: #e9edf3; }
+.st-text-main { color: #1a1a1a; }
+.st-text-sub { color: #7d7d7d; }
+.st-brand { color: #e0a800; }
+
+/* radius */
+.st-radius-card { border-radius: 20rpx; }
+.st-radius-input { border-radius: 12rpx; }
+.st-radius-btn { border-radius: 14rpx; }
+
+/* shadow */
+.st-shadow-card { box-shadow: 0 6rpx 16rpx rgba(17, 17, 17, 0.04); }
+
+/* spacing */
+.st-gap-xs { margin-top: 8rpx; }
+.st-gap-sm { margin-top: 12rpx; }
+.st-gap-md { margin-top: 16rpx; }
+.st-gap-lg { margin-top: 24rpx; }
