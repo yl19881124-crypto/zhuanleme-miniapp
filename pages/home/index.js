@@ -4,12 +4,12 @@ const { getTodayMetrics, getTodayState, getPrivacy, savePrivacy, switchStatus, a
 
 const STATUS_LIST = ['正常上班', '摸鱼中', '开会中', '假装忙', '午休中', '加班中'];
 const STATUS_CARD_MAP = {
-  '正常上班': { label: '搬砖中' },
-  '摸鱼中': { label: '摸鱼中' },
-  '开会中': { label: '开会中' },
-  '假装忙': { label: '装忙中' },
-  '午休中': { label: '干饭中' },
-  '加班中': { label: '加班中' }
+  '正常上班': { label: '搬砖中', icon: '💼' },
+  '摸鱼中': { label: '摸鱼中', icon: '🎣' },
+  '开会中': { label: '开会中', icon: '👥' },
+  '假装忙': { label: '装忙中', icon: '🎭' },
+  '午休中': { label: '干饭中', icon: '🍴' },
+  '加班中': { label: '加班中', icon: '🔋' }
 };
 const CATEGORIES = ['咖啡', '奶茶', '午饭', '通勤', '外卖', '购物', '其他'];
 
