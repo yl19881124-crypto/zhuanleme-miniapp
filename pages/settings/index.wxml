@@ -30,7 +30,7 @@
       </view>
       <view class="form-item compact">
         <view class="form-label">每日工时（小时）</view>
-        <view class="form-input readonly">按上下班与午休自动计算</view>
+        <view class="form-input readonly-input">按上下班与午休自动计算</view>
       </view>
     </view>
 

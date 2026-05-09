@@ -1,7 +1,7 @@
 @import "../../app.wxss";
 
 .settings-page {
-  padding: 30rpx 24rpx calc(140rpx + env(safe-area-inset-bottom));
+  padding: 58rpx 24rpx calc(140rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
   background: #efefef;
 }
@@ -22,8 +22,8 @@
 
 .chip {
   position: absolute;
-  top: -22rpx;
-  left: 20rpx;
+  top: -30rpx;
+  left: 24rpx;
   font-size: 34rpx;
   font-weight: 900;
   color: #111;
@@ -34,8 +34,8 @@
 }
 .chip-yellow { background: #f5d300; }
 
-.form-item { margin-top: 22rpx; }
-.form-item.compact { margin-top: 18rpx; }
+.form-item { margin-top: 26rpx; }
+.form-item.compact { margin-top: 22rpx; }
 .form-label { font-size: 27rpx; font-weight: 700; color: #222; margin-bottom: 10rpx; }
 
 .grid-two { display: flex; gap: 16rpx; }
@@ -54,7 +54,12 @@
   box-sizing: border-box;
 }
 .input-placeholder { color: #9a9a9a; }
-.readonly { color: #666; font-size: 25rpx; }
+.readonly-input {
+  background: #efefef;
+  color: #666;
+  font-size: 25rpx;
+  border-color: #c8c8c8;
+}
 
 .salary-input-wrap {
   display: flex;
@@ -75,13 +80,13 @@
   align-items: center;
   gap: 12rpx;
 }
-.dashed-top { margin-top: 10rpx; border-top: 3rpx dashed #2b2b2b; }
+.dashed-top { margin-top: 20rpx; padding-top: 26rpx; border-top: 3rpx dashed #2b2b2b; }
 .switch-copy { flex: 1; }
 .switch-title { font-size: 30rpx; font-weight: 800; color: #151515; }
 .switch-desc { margin-top: 6rpx; font-size: 23rpx; color: #666; }
 
 .save-btn {
-  margin-top: 18rpx;
+  margin-top: 30rpx;
   width: 100%;
   height: 88rpx;
   background: #f5d300;
