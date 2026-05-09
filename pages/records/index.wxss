@@ -97,7 +97,7 @@
 .time-value { font-size: 36rpx; font-weight: 900; color: #111; }
 
 .time-item-zero .time-name { color: #777; }
-.time-item-zero .time-value { color: #666; }
+.time-item-zero .time-value { color: #777; font-weight: 600; }
 
 .time-track {
   height: 22rpx;
