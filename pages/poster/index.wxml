@@ -1,13 +1,12 @@
 <view class="container">
-  <view class="poster-wrap">
-    <image wx:if="{{posterImagePath}}" src="{{posterImagePath}}" mode="widthFix" class="poster-preview"/>
-    <view wx:else class="loading">海报生成中...</view>
-    <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
+  <view class="panel">
+    <view class="title">海报功能暂时搁置</view>
+    <view class="desc">我们会在后续版本使用 image2 重新生成海报能力。</view>
+    <view class="desc">当前阶段优先用 Stitch 完成整套 UI 的体验优化。</view>
   </view>
 
   <view class="actions">
-    <button class="btn btn-primary" bindtap="savePoster">保存到相册</button>
-    <button class="btn btn-secondary" open-type="share">分享给朋友</button>
-    <button class="btn btn-ghost" bindtap="goBack">返回结算页</button>
+    <button class="btn btn-primary" bindtap="goHome">回到首页</button>
+    <button class="btn btn-secondary" bindtap="goSettlement">查看今日结算</button>
   </view>
 </view>

@@ -1,5 +1,5 @@
 page {
-  background: #f3f3f3;
+  background: #f5f6f8;
   color: #1a1a1a;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
 }
@@ -10,16 +10,17 @@ page {
 
 .card {
   background: #ffffff;
-  border: 1px solid #e6e6e6;
-  border-radius: 16rpx;
+  border: 1px solid #e9edf3;
+  border-radius: 20rpx;
   padding: 24rpx;
   margin-bottom: 20rpx;
+  box-shadow: 0 6rpx 16rpx rgba(17, 17, 17, 0.04);
 }
 
 .title {
   font-size: 34rpx;
   font-weight: 700;
-  margin-bottom: 10rpx;
+  margin-bottom: 12rpx;
 }
 
 .subtle {
@@ -31,10 +32,34 @@ page {
   color: #e0a800;
 }
 
+.btn-primary,
+.btn-secondary {
+  height: 84rpx;
+  line-height: 84rpx;
+  border-radius: 14rpx;
+  font-size: 28rpx;
+  padding: 0 20rpx;
+}
+
 .btn-primary {
   background: #111111;
-  color: #f8f8f8;
+  color: #ffffff;
+  border: 1px solid #111111;
+}
+
+.btn-secondary {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #d6dbe3;
+}
+
+.input,
+.picker,
+.popup-input {
+  width: 100%;
+  background: #f7f8fa;
+  border: 1px solid #e1e6ef;
   border-radius: 12rpx;
-  font-size: 28rpx;
   padding: 16rpx;
+  box-sizing: border-box;
 }
