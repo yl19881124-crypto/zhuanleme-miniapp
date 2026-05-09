@@ -15,6 +15,11 @@ Page({
     if (tabBar && tabBar.updateSelected) tabBar.updateSelected();
   },
   input(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
+  onTimeChange(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({ [`profile.${field}`]: value });
+  },
   toggleProfile(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
   saveProfile() {
     const p = this.data.profile;

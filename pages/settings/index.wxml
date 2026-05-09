@@ -35,13 +35,13 @@
     </view>
 
     <view class="grid-two">
-      <view class="form-item compact"><view class="form-label">上班时间</view><input class="form-input" data-key="startTime" value="{{profile.startTime}}" bindinput="input" /></view>
-      <view class="form-item compact"><view class="form-label">下班时间</view><input class="form-input" data-key="endTime" value="{{profile.endTime}}" bindinput="input" /></view>
+      <view class="form-item compact"><view class="form-label">上班时间</view><picker mode="time" value="{{profile.startTime}}" bindchange="onTimeChange" data-field="startTime"><view class="form-input time-picker-field">{{profile.startTime || '请选择上班时间'}}</view></picker></view>
+      <view class="form-item compact"><view class="form-label">下班时间</view><picker mode="time" value="{{profile.endTime}}" bindchange="onTimeChange" data-field="endTime"><view class="form-input time-picker-field">{{profile.endTime || '请选择下班时间'}}</view></picker></view>
     </view>
 
     <view class="grid-two">
-      <view class="form-item compact"><view class="form-label">午休开始</view><input class="form-input" data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input" /></view>
-      <view class="form-item compact"><view class="form-label">午休结束</view><input class="form-input" data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input" /></view>
+      <view class="form-item compact"><view class="form-label">午休开始</view><picker mode="time" value="{{profile.lunchStart}}" bindchange="onTimeChange" data-field="lunchStart"><view class="form-input time-picker-field">{{profile.lunchStart || '请选择午休开始'}}</view></picker></view>
+      <view class="form-item compact"><view class="form-label">午休结束</view><picker mode="time" value="{{profile.lunchEnd}}" bindchange="onTimeChange" data-field="lunchEnd"><view class="form-input time-picker-field">{{profile.lunchEnd || '请选择午休结束'}}</view></picker></view>
     </view>
 
     <view class="switch-row dashed-top">
