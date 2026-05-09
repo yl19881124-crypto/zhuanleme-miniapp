@@ -46,5 +46,42 @@
 .popup-input { height: 84rpx; border:3rpx solid #111111; border-radius: 14rpx; background:#F1F1F1; padding:0 16rpx; font-size: 28rpx; }
 .money-input-wrap .popup-input { flex:1; border:none; background:transparent; padding:0; }
 .picker { height: 84rpx; border:3rpx solid #111111; border-radius:14rpx; background:#F1F1F1; display:flex; align-items:center; padding:0 16rpx; }
-.popup-actions { display:flex; gap: 12rpx; margin-top: 24rpx; }
-.mini-btn { flex:1; }
+.expense-actions {
+  display: flex;
+  gap: 16rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 24rpx;
+}
+
+.expense-action-btn {
+  flex: 1;
+  height: 88rpx;
+  min-height: 88rpx;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  border: 4rpx solid #111111;
+  border-radius: 18rpx;
+  box-shadow: 6rpx 6rpx 0 #111111;
+  font-size: 30rpx;
+  font-weight: 900;
+}
+
+.expense-action-btn::after {
+  border: none;
+}
+
+.expense-cancel {
+  background: #FFFFFF;
+  color: #111111;
+}
+
+.expense-confirm {
+  background: #FFD400;
+  color: #111111;
+}
