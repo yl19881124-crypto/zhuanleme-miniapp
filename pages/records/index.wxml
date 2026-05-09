@@ -9,7 +9,7 @@
       <view class="metric-card">
         <view class="metric-label">摸鱼指数</view>
         <view class="metric-value metric-fish">{{fishIndex}}%</view>
-        <view class="metric-desc">大师级逃避。</view>
+        <view class="metric-desc">{{fishDesc}}</view>
       </view>
       <view class="metric-card">
         <view class="metric-label">精神损耗</view>
@@ -21,13 +21,13 @@
     <view class="block-card time-card">
       <view class="block-title">时间分配</view>
       <view class="time-list">
-        <view wx:for="{{statusSummary}}" wx:key="key" class="time-item">
+        <view wx:for="{{statusSummary}}" wx:key="key" class="time-item {{item.isZero ? 'time-item-zero' : ''}}">
           <view class="time-head">
             <text class="time-name">{{item.name}}</text>
             <text class="time-value">{{item.duration}}</text>
           </view>
           <view class="time-track">
-            <view class="time-fill" style="width: {{item.ratio}}%; background: {{item.color}};"></view>
+            <view class="time-fill" style="width: {{item.isZero ? 0 : item.ratio}}%; background: {{item.isZero ? '#d9d9d9' : item.color}};"></view>
           </view>
         </view>
       </view>
