@@ -78,7 +78,7 @@ Page({
       finalResultText,
       battleRewardText: posterContent.battleRewardText,
       fishGradeLabel: this.buildFishGrade(metrics.fishingIndex),
-      fishGradeDisplay: this.formatFishGradeDisplay(this.buildFishGrade(metrics.fishingIndex)),
+      fishGradeDisplay: this.buildFishGrade(metrics.fishingIndex),
       fishScoreText: `${metrics.fishingIndex}/100`,
       expenseDisplay,
       behaviorStats: this.buildBehaviorStats(metrics)
