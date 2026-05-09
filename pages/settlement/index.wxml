@@ -47,10 +47,10 @@
       <view class="mood-value danger">{{mental}}%</view>
     </view>
     <view class="mood-divider"></view>
-    <view class="mood-col">
+    <view class="mood-col mood-col-right">
       <view class="mood-label">摸鱼指数</view>
-      <view class="mood-value">{{fishGradeLabel}}</view>
-      <view class="mood-subtle">{{fishScoreText}}</view>
+      <view class="fish-grade">{{fishGradeLabel}}级</view>
+      <view class="fish-score">{{fishScoreText}}</view>
     </view>
   </view>
 
