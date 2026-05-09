@@ -1,6 +1,6 @@
 @import "../../app.wxss";
 
-.home-page { padding-bottom: calc(180rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
+.home-page { padding-bottom: calc(220rpx + env(safe-area-inset-bottom)); box-sizing: border-box; }
 .brand-bar { height: 88rpx; display:flex; align-items:center; justify-content:space-between; border-bottom:4rpx solid #111111; margin-bottom: 20rpx; }
 .brand-name { font-size: 40rpx; font-weight: 900; }
 .privacy-toggle { background:#FFFFFF; }
