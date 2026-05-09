@@ -1,23 +1,54 @@
-<view class="container">
-  <view class="tabs card">
-    <view class="tab {{tab==='status'?'active':''}}" data-tab="status" bindtap="switchTab">状态记录</view>
-    <view class="tab {{tab==='expense'?'active':''}}" data-tab="expense" bindtap="switchTab">消费记录</view>
+<view class="records-page">
+  <view class="records-tabs">
+    <view class="tab-item {{tab==='status'?'active':''}}" data-tab="status" bindtap="switchTab">状态记录</view>
+    <view class="tab-item {{tab==='expense'?'active':''}}" data-tab="expense" bindtap="switchTab">消费记录</view>
   </view>
 
-  <view wx:if="{{tab==='status'}}" class="card">
-    <view class="title">今日状态累计时长</view>
-    <view wx:for="{{statusSummary}}" wx:key="name" class="row {{item.raw===0?'weak':''}}"><text>{{item.name}}</text><text>{{item.duration}}（{{item.ratio}}）</text></view>
-    <view class="subtle">摸鱼指数：{{fishIndex}} / 100</view>
-    <view class="subtle">精神损耗：{{mental}} / 100</view>
-    <view class="summary-line">今天公司买到了你的时间，但没完全买到效率。</view>
-  </view>
-
-  <view wx:if="{{tab==='expense'}}" class="card">
-    <view class="title">钱包伤害记录</view>
-    <view wx:if="{{!expenses.length}}" class="subtle">今天还没花钱，钱包暂时安全。</view>
-    <view wx:for="{{expenses}}" wx:key="time" class="expense-item">
-      <view>{{item.category}} · ¥{{item.amount}}</view>
-      <view class="subtle">约等于白干 {{item.grind}}</view>
+  <view wx:if="{{tab==='status'}}" class="status-view">
+    <view class="metric-grid">
+      <view class="metric-card">
+        <view class="metric-label">摸鱼指数</view>
+        <view class="metric-value metric-fish">{{fishIndex}}%</view>
+        <view class="metric-desc">大师级逃避。</view>
+      </view>
+      <view class="metric-card">
+        <view class="metric-label">精神损耗</view>
+        <view class="metric-value metric-mental">{{mental}}%</view>
+        <view class="metric-desc">精疲力竭。</view>
+      </view>
     </view>
+
+    <view class="block-card time-card">
+      <view class="block-title">时间分配</view>
+      <view class="time-list">
+        <view wx:for="{{statusSummary}}" wx:key="key" class="time-item">
+          <view class="time-head">
+            <text class="time-name">{{item.name}}</text>
+            <text class="time-value">{{item.duration}}</text>
+          </view>
+          <view class="time-track">
+            <view class="time-fill" style="width: {{item.ratio}}%; background: {{item.color}};"></view>
+          </view>
+        </view>
+      </view>
+      <view class="roast">{{summaryText}}</view>
+    </view>
+  </view>
+
+  <view wx:if="{{tab==='expense'}}" class="expense-view">
+    <view wx:if="{{!expenses.length}}" class="block-card empty-card">今天还没花钱，钱包暂时安全。</view>
+    <block wx:else>
+      <view wx:for="{{expenses}}" wx:key="time" class="block-card expense-item">
+        <view class="expense-head">
+          <text class="expense-category">{{item.category}}</text>
+          <text class="expense-amount">¥{{item.amount}}</text>
+        </view>
+        <view wx:if="{{item.remark}}" class="expense-remark">{{item.remark}}</view>
+        <view class="expense-meta">
+          <text wx:if="{{item.time}}">{{item.time}}</text>
+          <text>约等于白干 {{item.grind}}</text>
+        </view>
+      </view>
+    </block>
   </view>
 </view>
