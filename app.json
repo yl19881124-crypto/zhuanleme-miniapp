@@ -39,7 +39,8 @@
         "pagePath": "pages/settings/index",
         "text": "配置"
       }
-    ]
+    ],
+    "custom": true
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
