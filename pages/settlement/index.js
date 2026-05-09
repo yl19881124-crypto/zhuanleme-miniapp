@@ -16,6 +16,7 @@ Page({
     result: '勉强通关',
     finalResultText: '副本未开始',
     fishGradeLabel: 'C级',
+    fishGradeDisplay: 'C级',
     fishScoreText: '0/100',
     expenseDisplay: '¥0.00',
     workerLevelLabel: '',
@@ -31,6 +32,10 @@ Page({
     if (index <= 60) return 'A级';
     if (index <= 80) return 'S级';
     return 'S+级';
+  },
+  formatFishGradeDisplay(fishGrade) {
+    if (!fishGrade) return 'C级';
+    return String(fishGrade).includes('级') ? fishGrade : `${fishGrade}级`;
   },
   buildBehaviorStats(metrics) {
     const total = Math.max(
@@ -73,6 +78,7 @@ Page({
       finalResultText,
       battleRewardText: posterContent.battleRewardText,
       fishGradeLabel: this.buildFishGrade(metrics.fishingIndex),
+      fishGradeDisplay: this.formatFishGradeDisplay(this.buildFishGrade(metrics.fishingIndex)),
       fishScoreText: `${metrics.fishingIndex}/100`,
       expenseDisplay,
       behaviorStats: this.buildBehaviorStats(metrics)
