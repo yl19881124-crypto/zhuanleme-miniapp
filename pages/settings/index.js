@@ -40,5 +40,6 @@ Page({
   },
   clearToday() { set(KEYS.STATUS_LOGS, []); set(KEYS.EXPENSE_LOGS, []); wx.showToast({ title: '今日记录已清空', icon: 'success' }); },
   resetAll() { wx.clearStorageSync(); set(KEYS.PRIVACY, defaultPrivacy); wx.showToast({ title: '已重置', icon: 'success' }); },
-  exportData() { wx.showToast({ title: '导出功能占位', icon: 'none' }); }
+  exportData() { wx.showToast({ title: '导出功能占位', icon: 'none' }); },
+  goPlan() { wx.navigateTo({ url: '/pages/plan/index' }); }
 });
