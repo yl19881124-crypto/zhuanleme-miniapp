@@ -89,7 +89,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .mood-col-left { padding-right: 28rpx; }
 .mood-col-right { padding-left: 36rpx; }
