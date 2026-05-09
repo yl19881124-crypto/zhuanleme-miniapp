@@ -69,9 +69,9 @@
         <view class="z-subtle">备注</view>
         <input class="popup-input" placeholder="选填，比如：冰美式" bindinput="onNote" value="{{form.note}}" />
       </view>
-      <view class="popup-actions">
-        <button class="z-btn-secondary mini-btn" bindtap="closeExpensePopup">取消</button>
-        <button class="z-btn-primary mini-btn" bindtap="addExpense">确认记录</button>
+      <view class="expense-actions">
+        <button class="expense-action-btn expense-cancel" bindtap="closeExpensePopup">取消</button>
+        <button class="expense-action-btn expense-confirm" bindtap="addExpense">确认记录</button>
       </view>
     </view>
   </view>
