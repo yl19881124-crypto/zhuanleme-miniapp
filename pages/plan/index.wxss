@@ -1,0 +1,2 @@
+@import "../../app.wxss";
+.line { font-size: 28rpx; color: #333; line-height: 1.8; margin-top: 8rpx; }

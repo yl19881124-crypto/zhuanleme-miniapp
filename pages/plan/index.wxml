@@ -1,0 +1,17 @@
+<view class="container">
+  <view class="card">
+    <view class="title">V2 重做方式（一步一步）</view>
+    <view class="line">1. 先冻结方案：明确本期做什么、不做什么。</view>
+    <view class="line">2. 先统一 Stitch UI 组件，再进入页面开发。</view>
+    <view class="line">3. 先做主流程：首页 → 记账 → 结算。</view>
+    <view class="line">4. 再补记录编辑和设置收口。</view>
+    <view class="line">5. 最后灰度验收，海报 image2 独立推进。</view>
+  </view>
+
+  <view class="card">
+    <view class="title">本期共识</view>
+    <view class="line">- 海报功能暂不作为主流程阻塞项。</view>
+    <view class="line">- 每阶段开始前先评审方案和验收口径。</view>
+    <view class="line">- 每周只推进 1~2 个核心目标，确保可交付。</view>
+  </view>
+</view>
