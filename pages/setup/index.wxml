@@ -1,8 +1,29 @@
-<view class="container">
-  <view class="card">
-    <view class="title">首次设置</view>
-    <view class="subtle">只保存在本地，不上传。先填个大概月薪，后面可改。</view>
-    <input placeholder="输入税前月薪" type="digit" bindinput="onSalaryInput" class="input" />
-    <button class="btn-primary" bindtap="saveConfig">保存并开始打工</button>
+<view class="setup-page">
+  <view class="hero">
+    <view class="hero-title">首次设置</view>
+    <view class="hero-subtitle">只保存在本地，不上传。先填个大概月薪，后面可改。</view>
+  </view>
+
+  <view class="setup-card">
+    <view class="card-tag">本地保存</view>
+
+    <view class="field-label">月薪（大概）</view>
+    <view class="salary-input-wrap">
+      <view class="salary-prefix">¥</view>
+      <input
+        class="salary-input"
+        type="digit"
+        placeholder="输入你那微薄的薪水..."
+        placeholder-class="salary-placeholder"
+        bindinput="onSalaryInput"
+        value="{{monthlySalary}}"
+      />
+    </view>
+
+    <view class="field-tip">用于估算今天回血多少，不会上传。</view>
+
+    <view class="start-btn" bindtap="saveConfig">保存并开始打工</view>
+
+    <view class="footer-tip">进入后可以继续完善工作日、上下班时间、午休等规则。</view>
   </view>
 </view>
