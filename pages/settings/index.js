@@ -11,6 +11,8 @@ Page({
   onShow() {
     const config = getConfig();
     this.setData({ profile: { ...this.data.profile, ...config }, privacy: get(KEYS.PRIVACY, defaultPrivacy) });
+    const tabBar = this.getTabBar && this.getTabBar();
+    if (tabBar && tabBar.updateSelected) tabBar.updateSelected();
   },
   input(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
   toggleProfile(e) { this.setData({ [`profile.${e.currentTarget.dataset.key}`]: e.detail.value }); },
