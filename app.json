@@ -18,14 +18,14 @@
     "backgroundTextStyle": "dark"
   },
   "tabBar": {
-    "color": "#666666",
-    "selectedColor": "#e0a800",
+    "color": "#3A3420",
+    "selectedColor": "#FFD400",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "首页"
+        "text": "回血"
       },
       {
         "pagePath": "pages/records/index",
@@ -37,7 +37,7 @@
       },
       {
         "pagePath": "pages/settings/index",
-        "text": "我的"
+        "text": "配置"
       }
     ]
   },

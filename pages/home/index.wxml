@@ -1,85 +1,77 @@
-<view class="container">
-  <view class="card brand">
-    <view class="title">赚了么</view>
-    <view class="subtle">今天打工回血了吗？</view>
+<view class="z-page home-page">
+  <view class="brand-bar">
+    <view class="brand-name">赚了么</view>
+    <view class="z-pill privacy-toggle" bindtap="togglePrivacy">{{hideLabel}}</view>
   </view>
 
-  <view class="card hero-card">
-    <view class="hero-head">
-      <view>
-        <view class="subtle">今日已赚</view>
-        <view class="hero-money">{{todayIncome}}</view>
-      </view>
-      <view class="privacy-toggle" bindtap="togglePrivacy">{{hideLabel}}</view>
+  <view class="z-card battle-card">
+    <view class="battle-head">
+      <view class="battle-title">今日战果</view>
+      <view class="battle-icon">💴</view>
     </view>
-
-    <view class="progress-line">
-      <text>今日打工进度 {{progress}}%</text>
-    </view>
-    <progress percent="{{progress}}" stroke-width="12" activeColor="#e0a800" />
-
-    <view class="metrics">
-      <view>正在回血：{{perSecondText}}</view><view>已工作时长：{{workedDuration}}</view>
-      <view>距离下班：{{offWorkCountdown}}</view><view>当前状态：{{currentStatus}}</view>
-    </view>
-    <view class="roast">{{roastText}}</view>
-  </view>
-
-  <view class="card">
-    <view class="title">现在在干嘛？</view>
-    <view class="status-grid">
-      <view wx:for="{{statusList}}" wx:key="*this" class="status-item {{currentStatus===item?'active':''}}" data-status="{{item}}" bindtap="chooseStatus">{{item}}</view>
+    <view class="battle-body">
+      <view class="battle-money">{{todayIncome}}</view>
+      <view class="z-pill battle-pill">{{roastText}}</view>
     </view>
   </view>
 
-  <view class="card quicks">
-    <button class="quick-btn btn-primary" bindtap="openExpensePopup">记一笔消费</button>
-    <button class="quick-btn btn-secondary" bindtap="goSettlement">今日结算</button>
-  </view>
-
-  <view class="card overview">
-    <view class="title">今日回血情况</view>
-    <view class="mini-grid">
-      <view>钱包伤害
-<text>{{todayExpense}}</text></view>
-      <view>今日回血
-<text>{{netIncome}}</text></view>
-      <view>摸鱼时长
-<text>{{fishDuration}}</text></view>
-      <view>开会时长
-<text>{{meetingDuration}}</text></view>
+  <view class="status-grid">
+    <view wx:for="{{statusCards}}" wx:key="value" class="status-item {{currentStatus===item.value?'active':''}}" data-status="{{item.value}}" bindtap="chooseStatus">
+      <view class="status-icon">{{item.icon}}</view>
+      <view class="status-text">{{item.label}}</view>
     </view>
   </view>
 
-  <view class="card">
-    <view class="title">最近消费记录</view>
-    <view wx:if="{{!recentExpenses.length}}" class="subtle">今天还没花钱，钱包暂时安全。</view>
-    <view wx:for="{{recentExpenses}}" wx:key="time" class="expense-row">{{item.category}} · ¥{{item.amount}}</view>
+  <view class="z-card progress-card">
+    <view class="progress-top">
+      <view class="z-section-title">🧍 副本进度</view>
+      <view class="z-pill">距下班：{{offWorkCountdown}}</view>
+    </view>
+    <view class="z-subtle progress-label">已熬 {{workedDuration}}</view>
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progress}}%;"></view>
+    </view>
+  </view>
+
+  <view class="duo-cards">
+    <view class="z-card duo-item danger-card">
+      <view class="duo-title">钱包受损</view>
+      <view class="duo-value">{{todayExpenseDisplay==='***' ? '***' : ('-¥' + todayExpenseDisplay)}}</view>
+    </view>
+    <view class="z-card duo-item gain-card">
+      <view class="duo-title">回血进度</view>
+      <view class="duo-value">{{netIncomeDisplay==='***' ? '***' : ('+¥' + netIncomeDisplay)}}</view>
+    </view>
+  </view>
+
+  <view class="btn-group">
+    <button class="z-btn-primary action-btn" bindtap="openExpensePopup">🧾 记录消费</button>
+    <button class="z-btn-secondary action-btn" bindtap="goSettlement">🏁 每日结算</button>
   </view>
 
   <view wx:if="{{showExpensePopup}}" class="popup-mask" bindtap="closeExpensePopup">
-    <view class="popup" catchtap="noop">
-      <view class="title">记一笔消费</view>
+    <view class="popup z-card-flat" catchtap="noop">
+      <view class="z-section-title">记一笔消费</view>
       <view class="field">
-        <view class="label">金额</view>
+        <view class="z-subtle">金额</view>
         <view class="money-input-wrap">
           <text class="currency">¥</text>
           <input class="popup-input" placeholder="请输入金额" type="digit" bindinput="onAmount" value="{{form.amount}}" />
         </view>
       </view>
       <view class="field">
-        <view class="label">分类</view>
+        <view class="z-subtle">分类</view>
         <picker mode="selector" range="{{categories}}" bindchange="onCategory">
-          <view class="picker"> {{form.category}} </view>
+          <view class="picker">{{form.category}}</view>
         </picker>
       </view>
       <view class="field">
-        <view class="label">备注</view>
+        <view class="z-subtle">备注</view>
         <input class="popup-input" placeholder="选填，比如：冰美式" bindinput="onNote" value="{{form.note}}" />
       </view>
       <view class="popup-actions">
-        <button class="quick-btn btn-secondary" bindtap="closeExpensePopup">取消</button>
-        <button class="quick-btn btn-primary" bindtap="addExpense">确认记录</button>
+        <button class="z-btn-secondary mini-btn" bindtap="closeExpensePopup">取消</button>
+        <button class="z-btn-primary mini-btn" bindtap="addExpense">确认记录</button>
       </view>
     </view>
   </view>

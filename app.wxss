@@ -1,65 +1,84 @@
 page {
-  background: #f5f6f8;
-  color: #1a1a1a;
+  background: #F5F5F2;
+  color: #111111;
   font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
 }
 
-.container {
+.z-page {
+  background: #F5F5F2;
+  min-height: 100vh;
   padding: 24rpx;
-}
-
-.card {
-  background: #ffffff;
-  border: 1px solid #e9edf3;
-  border-radius: 20rpx;
-  padding: 24rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 6rpx 16rpx rgba(17, 17, 17, 0.04);
-}
-
-.title {
-  font-size: 34rpx;
-  font-weight: 700;
-  margin-bottom: 12rpx;
-}
-
-.subtle {
-  color: #7d7d7d;
-  font-size: 24rpx;
-}
-
-.accent {
-  color: #e0a800;
-}
-
-.btn-primary,
-.btn-secondary {
-  height: 84rpx;
-  line-height: 84rpx;
-  border-radius: 14rpx;
-  font-size: 28rpx;
-  padding: 0 20rpx;
-}
-
-.btn-primary {
-  background: #111111;
-  color: #ffffff;
-  border: 1px solid #111111;
-}
-
-.btn-secondary {
-  background: #ffffff;
-  color: #111111;
-  border: 1px solid #d6dbe3;
-}
-
-.input,
-.picker,
-.popup-input {
-  width: 100%;
-  background: #f7f8fa;
-  border: 1px solid #e1e6ef;
-  border-radius: 12rpx;
-  padding: 16rpx;
   box-sizing: border-box;
 }
+
+.z-card {
+  background: #FFFFFF;
+  border: 4rpx solid #111111;
+  border-radius: 24rpx;
+  box-shadow: 8rpx 8rpx 0 #111111;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.z-card-flat {
+  background: #FFFFFF;
+  border: 4rpx solid #111111;
+  border-radius: 24rpx;
+  padding: 24rpx;
+  box-sizing: border-box;
+}
+
+.z-section-title {
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #111111;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.z-subtle {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.z-btn-primary,
+.z-btn-secondary {
+  height: 88rpx;
+  line-height: 88rpx;
+  font-size: 30rpx;
+  font-weight: 900;
+  border-radius: 18rpx;
+  border: 4rpx solid #111111;
+  box-shadow: 6rpx 6rpx 0 #111111;
+}
+
+.z-btn-primary {
+  background: #FFD400;
+  color: #111111;
+}
+
+.z-btn-secondary {
+  background: #FFFFFF;
+  color: #111111;
+}
+
+.z-pill {
+  border: 3rpx solid #111111;
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container { padding: 24rpx; }
+.card { background: #FFFFFF; border: 4rpx solid #111111; border-radius: 24rpx; box-shadow: 8rpx 8rpx 0 #111111; padding: 24rpx; margin-bottom: 20rpx; }
+.title { font-size: 34rpx; font-weight: 900; margin-bottom: 12rpx; }
+.subtle { color: #666666; font-size: 24rpx; }
+.btn-primary, .btn-secondary { height: 88rpx; line-height: 88rpx; border-radius: 18rpx; font-size: 30rpx; font-weight: 900; border: 4rpx solid #111111; box-shadow: 6rpx 6rpx 0 #111111; }
+.btn-primary { background: #FFD400; color: #111111; }
+.btn-secondary { background: #FFFFFF; color: #111111; }
+.input, .picker, .popup-input { width: 100%; background: #F1F1F1; border: 3rpx solid #111111; border-radius: 14rpx; padding: 16rpx; box-sizing: border-box; }
