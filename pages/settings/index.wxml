@@ -1,42 +1,101 @@
-<view class="container">
-  <view class="card">
-    <view class="title">工资与工作规则</view>
+<view class="settings-page">
+  <view class="header-block">
+    <view class="page-title">配置</view>
+    <view class="page-subtitle">调整地牢规则，你的战利品取决于此。</view>
+  </view>
 
-    <view class="field">
-      <view class="label">月薪</view>
-      <view class="salary-wrap"><text class="prefix">¥</text><input class="input salary" type="digit" data-key="monthlySalary" value="{{profile.monthlySalary}}" bindinput="input" /></view>
+  <view class="module-card loot-card">
+    <view class="chip chip-yellow">战利品规则</view>
+
+    <view class="form-item">
+      <view class="form-label">月薪（幻觉）</view>
+      <view class="salary-input-wrap">
+        <text class="currency">¥</text>
+        <input
+          class="form-input salary-input"
+          type="digit"
+          placeholder="输入你那微薄的薪水..."
+          placeholder-class="input-placeholder"
+          data-key="monthlySalary"
+          value="{{profile.monthlySalary}}"
+          bindinput="input"
+        />
+      </view>
     </view>
 
-    <view class="field">
-      <view class="label">每月工作日</view>
-      <input class="input" type="number" data-key="workdaysPerMonth" value="{{profile.workdaysPerMonth}}" bindinput="input" />
+    <view class="grid-two">
+      <view class="form-item compact">
+        <view class="form-label">每月工作天数</view>
+        <input class="form-input" type="number" data-key="workdaysPerMonth" value="{{profile.workdaysPerMonth}}" bindinput="input" />
+      </view>
+      <view class="form-item compact">
+        <view class="form-label">每日工时（小时）</view>
+        <view class="form-input readonly">按上下班与午休自动计算</view>
+      </view>
     </view>
 
-    <view class="field"><view class="label">上班时间</view><input class="input" data-key="startTime" value="{{profile.startTime}}" bindinput="input"/></view>
-    <view class="field"><view class="label">下班时间</view><input class="input" data-key="endTime" value="{{profile.endTime}}" bindinput="input"/></view>
-    <view class="field"><view class="label">午休开始</view><input class="input" data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input"/></view>
-    <view class="field"><view class="label">午休结束</view><input class="input" data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input"/></view>
-    <view class="item"><text>午休是否计薪</text><switch checked="{{profile.lunchPaid}}" data-key="lunchPaid" bindchange="toggleProfile"/></view>
-    <view class="item"><text>周末是否计薪</text><switch checked="{{profile.weekendPaid}}" data-key="weekendPaid" bindchange="toggleProfile"/></view>
-    <button class="btn-primary" bindtap="saveProfile">保存设置</button>
+    <view class="grid-two">
+      <view class="form-item compact"><view class="form-label">上班时间</view><input class="form-input" data-key="startTime" value="{{profile.startTime}}" bindinput="input" /></view>
+      <view class="form-item compact"><view class="form-label">下班时间</view><input class="form-input" data-key="endTime" value="{{profile.endTime}}" bindinput="input" /></view>
+    </view>
+
+    <view class="grid-two">
+      <view class="form-item compact"><view class="form-label">午休开始</view><input class="form-input" data-key="lunchStart" value="{{profile.lunchStart}}" bindinput="input" /></view>
+      <view class="form-item compact"><view class="form-label">午休结束</view><input class="form-input" data-key="lunchEnd" value="{{profile.lunchEnd}}" bindinput="input" /></view>
+    </view>
+
+    <view class="switch-row dashed-top">
+      <view class="switch-copy">
+        <view class="switch-title">午休是否计薪</view>
+        <view class="switch-desc">吃饭也算工伤吗？（并不）</view>
+      </view>
+      <switch checked="{{profile.lunchPaid}}" data-key="lunchPaid" bindchange="toggleProfile" color="#f5d300" />
+    </view>
+
+    <view class="switch-row">
+      <view class="switch-copy">
+        <view class="switch-title">周末是否计薪</view>
+        <view class="switch-desc">周末副本是否计入战利品。</view>
+      </view>
+      <switch checked="{{profile.weekendPaid}}" data-key="weekendPaid" bindchange="toggleProfile" color="#f5d300" />
+    </view>
+
+    <view class="save-btn" bindtap="saveProfile">保存设置</view>
   </view>
 
-  <view class="card">
-    <view class="title">隐私设置</view>
-    <view class="item"><text>首页隐私模式：控制自己看首页时是否隐藏金额</text><switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange"/></view>
-    <view class="item"><text>分享脱敏：海报默认不展示真实收入</text><switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange"/></view>
-    <view class="subtle">默认你自己看真实金额，分享时再脱敏，爽点和安全都保住。</view>
+  <view class="module-card">
+    <view class="chip">隐身模式</view>
+
+    <view class="privacy-item">
+      <view class="privacy-icon">◍</view>
+      <view class="privacy-copy">
+        <view class="privacy-title">首页隐藏模式</view>
+        <view class="privacy-desc">当老板路过时隐藏精确收益。</view>
+      </view>
+      <switch checked="{{privacy.hideTodayIncome}}" data-key="hideTodayIncome" bindchange="onPrivacyChange" color="#f5d300" />
+    </view>
+
+    <view class="privacy-item no-border">
+      <view class="privacy-icon">※</view>
+      <view class="privacy-copy">
+        <view class="privacy-title">数据脱敏</view>
+        <view class="privacy-desc">显示“很多”而不是具体数字。</view>
+      </view>
+      <switch checked="{{privacy.maskOnShare}}" data-key="maskOnShare" bindchange="onPrivacyChange" color="#f5d300" />
+    </view>
   </view>
 
-  <view class="card">
-    <view class="title">数据管理</view>
-    <button class="btn-secondary" bindtap="clearToday">清空今日记录</button>
-    <button class="btn-secondary" bindtap="resetAll">重置所有设置</button>
-    <button class="btn-secondary" bindtap="exportData">导出本地数据（占位）</button>
+  <view class="module-card danger-card">
+    <view class="module-title">危险区域</view>
+    <view class="danger-list">
+      <view class="danger-item" bindtap="clearToday">
+        <text class="danger-text">清空今日战利品</text>
+        <text class="arrow">›</text>
+      </view>
+      <view class="danger-item alert" bindtap="resetAll">
+        <text class="danger-text danger-red">重置所有设置</text>
+        <text class="arrow danger-red">›</text>
+      </view>
+    </view>
   </view>
-  <view class="card">
-    <view class="title">版本规划</view>
-    <button class="btn-secondary" bindtap="goPlan">查看 V2 分步方案</button>
-  </view>
-
 </view>

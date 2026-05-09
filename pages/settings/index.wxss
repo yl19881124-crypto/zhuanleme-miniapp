@@ -1,9 +1,131 @@
 @import "../../app.wxss";
 
-.field { margin-bottom: 14rpx; }
-.label { font-size: 24rpx; color:#555; margin-bottom: 8rpx; }
-.salary-wrap { display:flex; align-items:center; background:#f7f8fa; border:1px solid #e1e6ef; border-radius: 12rpx; padding: 0 14rpx; }
-.prefix { font-size: 28rpx; color:#444; margin-right: 6rpx; }
-.salary { flex:1; background: transparent; border:none; }
-.item { display: flex; justify-content: space-between; align-items: center; padding: 16rpx 0; border-bottom: 1px solid #eef1f5; gap: 16rpx; }
-.btn-secondary, .btn-primary { margin-top: 12rpx; }
+.settings-page {
+  padding: 30rpx 24rpx calc(140rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: #efefef;
+}
+
+.header-block { margin-bottom: 24rpx; }
+.page-title { font-size: 50rpx; font-weight: 900; color: #111; }
+.page-subtitle { margin-top: 14rpx; font-size: 30rpx; color: #4a4a3d; }
+
+.module-card {
+  position: relative;
+  background: #fff;
+  border: 5rpx solid #111;
+  border-radius: 28rpx;
+  box-shadow: 0 10rpx 0 #1f1f1f;
+  padding: 32rpx 24rpx;
+  margin-bottom: 24rpx;
+}
+
+.chip {
+  position: absolute;
+  top: -22rpx;
+  left: 20rpx;
+  font-size: 34rpx;
+  font-weight: 900;
+  color: #111;
+  border: 5rpx solid #111;
+  border-radius: 18rpx;
+  padding: 8rpx 20rpx;
+  background: #ececec;
+}
+.chip-yellow { background: #f5d300; }
+
+.form-item { margin-top: 22rpx; }
+.form-item.compact { margin-top: 18rpx; }
+.form-label { font-size: 27rpx; font-weight: 700; color: #222; margin-bottom: 10rpx; }
+
+.grid-two { display: flex; gap: 16rpx; }
+.grid-two .form-item { flex: 1; min-width: 0; }
+
+.form-input {
+  height: 82rpx;
+  border: 3rpx solid #1b1b1b;
+  border-radius: 16rpx;
+  padding: 0 18rpx;
+  background: #f8f8f8;
+  font-size: 29rpx;
+  color: #111;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+.input-placeholder { color: #9a9a9a; }
+.readonly { color: #666; font-size: 25rpx; }
+
+.salary-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 3rpx solid #1b1b1b;
+  border-radius: 16rpx;
+  background: #f8f8f8;
+  padding: 0 18rpx;
+  height: 82rpx;
+}
+.currency { font-size: 38rpx; font-weight: 700; margin-right: 12rpx; color: #353123; }
+.salary-input { flex: 1; border: none; background: transparent; padding: 0; }
+
+.switch-row {
+  padding: 20rpx 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
+}
+.dashed-top { margin-top: 10rpx; border-top: 3rpx dashed #2b2b2b; }
+.switch-copy { flex: 1; }
+.switch-title { font-size: 30rpx; font-weight: 800; color: #151515; }
+.switch-desc { margin-top: 6rpx; font-size: 23rpx; color: #666; }
+
+.save-btn {
+  margin-top: 18rpx;
+  width: 100%;
+  height: 88rpx;
+  background: #f5d300;
+  border: 4rpx solid #111;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 900;
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.privacy-item {
+  margin-top: 22rpx;
+  padding-bottom: 18rpx;
+  border-bottom: 2rpx solid #ececec;
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+.no-border { border-bottom: none; padding-bottom: 0; }
+.privacy-icon {
+  width: 70rpx; height: 70rpx; border: 3rpx solid #111; border-radius: 16rpx;
+  display: flex; align-items: center; justify-content: center; font-size: 32rpx; font-weight: 800;
+}
+.privacy-copy { flex: 1; }
+.privacy-title { font-size: 32rpx; font-weight: 900; color: #111; }
+.privacy-desc { margin-top: 6rpx; font-size: 24rpx; color: #666; }
+
+.module-title { font-size: 34rpx; font-weight: 900; color: #111; margin-bottom: 18rpx; }
+.danger-list { border-top: 4rpx solid #222; padding-top: 16rpx; }
+.danger-item {
+  margin-top: 14rpx;
+  border: 4rpx solid #111;
+  border-radius: 16rpx;
+  background: #fff;
+  height: 88rpx;
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.alert { background: #f8e0e0; border-color: #7b2b2b; }
+.danger-text { font-size: 34rpx; font-weight: 800; color: #111; }
+.danger-red { color: #9d1414; }
+.arrow { font-size: 44rpx; font-weight: 700; line-height: 1; }
