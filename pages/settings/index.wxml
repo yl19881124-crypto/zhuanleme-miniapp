@@ -34,4 +34,9 @@
     <button class="btn-secondary" bindtap="resetAll">重置所有设置</button>
     <button class="btn-secondary" bindtap="exportData">导出本地数据（占位）</button>
   </view>
+  <view class="card">
+    <view class="title">版本规划</view>
+    <button class="btn-secondary" bindtap="goPlan">查看 V2 分步方案</button>
+  </view>
+
 </view>
