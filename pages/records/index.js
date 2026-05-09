@@ -32,6 +32,7 @@ Page({
     const list = ALL_STATUS.map((k) => {
       const raw = metrics.statusDurations[k] || 0;
       const meta = STATUS_META[k] || { name: k, color: '#888' };
+      const totalMinutes = Math.floor(raw / 60000);
       return {
         key: k,
         name: meta.name,
@@ -39,7 +40,7 @@ Page({
         raw,
         ratio: Math.round((raw / total) * 100),
         color: meta.color,
-        isZero: raw === 0
+        isZero: totalMinutes === 0
       };
     });
     const dayState = getTodayState(Date.now());
