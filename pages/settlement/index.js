@@ -15,7 +15,9 @@ Page({
     battleRewardText: '带薪摸鱼',
     result: '勉强通关',
     finalResultText: '副本未开始',
-    fishGrade: 'C (0/100)',
+    fishGradeLabel: 'C级',
+    fishScoreText: '0/100',
+    expenseDisplay: '¥0.00',
     workerLevelLabel: '',
     behaviorStats: []
   },
@@ -24,11 +26,11 @@ Page({
   onUnload() { this.stopRefresh(); },
   stopRefresh() { if (this.timer) clearInterval(this.timer); this.timer = null; },
   buildFishGrade(index) {
-    if (index <= 20) return `C (${index}/100)`;
-    if (index <= 40) return `B (${index}/100)`;
-    if (index <= 60) return `A (${index}/100)`;
-    if (index <= 80) return `S (${index}/100)`;
-    return `S+ (${index}/100)`;
+    if (index <= 20) return 'C级';
+    if (index <= 40) return 'B级';
+    if (index <= 60) return 'A级';
+    if (index <= 80) return 'S级';
+    return 'S+级';
   },
   buildBehaviorStats(metrics) {
     const total = Math.max(
@@ -56,6 +58,9 @@ Page({
     const metrics = getTodayMetrics(Date.now());
     const posterContent = buildPosterContent(metrics);
     const finalResultText = this.resolveFinalResult(metrics, posterContent);
+    const expenseDisplay = Number(metrics.totalExpense) > 0
+      ? `-¥${formatMoney(metrics.totalExpense, hidden)}`
+      : `¥${formatMoney(metrics.totalExpense, hidden)}`;
     this.setData({
       gross: formatMoney(metrics.grossIncome, hidden),
       expense: formatMoney(metrics.totalExpense, hidden),
@@ -67,7 +72,9 @@ Page({
       result: posterContent.dungeonResultText || metrics.dungeonResultText || metrics.dungeonResult || '勉强通关',
       finalResultText,
       battleRewardText: posterContent.battleRewardText,
-      fishGrade: this.buildFishGrade(metrics.fishingIndex),
+      fishGradeLabel: this.buildFishGrade(metrics.fishingIndex),
+      fishScoreText: `${metrics.fishingIndex}/100`,
+      expenseDisplay,
       behaviorStats: this.buildBehaviorStats(metrics)
     });
   },

@@ -17,7 +17,7 @@
       </view>
       <view class="loot-small expense">
         <view class="loot-label">钱包伤害</view>
-        <view class="loot-value">-¥{{expense}}</view>
+        <view class="loot-value">{{expenseDisplay}}</view>
       </view>
     </view>
     <view class="loot-net">
@@ -49,7 +49,8 @@
     <view class="mood-divider"></view>
     <view class="mood-col">
       <view class="mood-label">摸鱼指数</view>
-      <view class="mood-value">{{fishGrade}}</view>
+      <view class="mood-value">{{fishGradeLabel}}</view>
+      <view class="mood-subtle">{{fishScoreText}}</view>
     </view>
   </view>
 

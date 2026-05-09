@@ -2,106 +2,109 @@
 
 .settlement-page {
   padding-bottom: calc(140rpx + env(safe-area-inset-bottom));
-  background: #efefef;
 }
 
 .card,
 .judge-card,
 .action-btn {
-  border: 5rpx solid #111;
-  border-radius: 30rpx;
-  box-shadow: 0 10rpx 0 #111;
+  border: 4rpx solid #111111;
+  border-radius: 24rpx;
+  box-shadow: 8rpx 8rpx 0 #111111;
 }
 
 .card {
-  background: #fff;
-  margin-bottom: 28rpx;
-  padding: 28rpx;
+  background: #FFFFFF;
+  margin-bottom: 22rpx;
+  padding: 24rpx;
 }
 
 .dungeon-report {
   text-align: center;
-  position: relative;
+  padding-top: 22rpx;
+  padding-bottom: 22rpx;
 }
 
-.report-subtitle { font-size: 34rpx; font-weight: 800; color: #6b5b14; }
-.report-title { font-size: 56rpx; font-weight: 900; margin: 12rpx 0 20rpx; }
+.report-subtitle { font-size: 30rpx; font-weight: 800; color: #6b5b14; }
+.report-title { font-size: 50rpx; font-weight: 900; line-height: 1.2; margin: 10rpx 0 18rpx; }
 .status-pill {
   display: inline-block;
-  background: #ffd400;
-  border: 4rpx solid #111;
+  background: #FFD400;
+  border: 3rpx solid #111111;
   border-radius: 999rpx;
-  padding: 12rpx 30rpx;
-  font-size: 34rpx;
-  font-weight: 800;
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  font-weight: 700;
 }
 
 .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18rpx; }
-.section-title { font-size: 44rpx; font-weight: 900; }
-.level-tag { font-size: 32rpx; font-weight: 700; color: #3b3312; }
+.section-title { font-size: 34rpx; font-weight: 900; }
+.level-tag { font-size: 24rpx; font-weight: 700; color: #3b3312; }
 
 .loot-grid { display: flex; gap: 16rpx; margin-bottom: 16rpx; }
 .loot-small {
   flex: 1;
-  border: 4rpx solid #111;
+  border: 4rpx solid #111111;
   border-radius: 20rpx;
-  background: #f5f5f5;
+  background: #F5F5F5;
   padding: 18rpx;
   text-align: center;
 }
-.loot-small.expense { background: #ffeaea; }
-.loot-label { font-size: 32rpx; font-weight: 700; }
-.loot-value { font-size: 54rpx; font-weight: 900; margin-top: 8rpx; color: #5a4a08; }
+.loot-small.expense { background: #FFEAEA; }
+.loot-label { font-size: 26rpx; font-weight: 700; }
+.loot-value { font-size: 42rpx; font-weight: 900; margin-top: 8rpx; color: #5a4a08; line-height: 1.2; }
 .expense .loot-value { color: #8d1111; }
 .loot-net {
-  border: 4rpx solid #111;
+  border: 4rpx solid #111111;
   border-radius: 20rpx;
-  background: #ffd400;
+  background: #FFD400;
   padding: 20rpx;
   text-align: center;
 }
-.loot-net-value { font-size: 62rpx; font-weight: 900; margin-top: 8rpx; color: #5a4a08; }
+.loot-net-value { font-size: 54rpx; font-weight: 900; margin-top: 8rpx; color: #5a4a08; line-height: 1.2; }
 
-.behavior-item { margin-top: 16rpx; }
-.behavior-row { display: flex; justify-content: space-between; font-size: 32rpx; font-weight: 700; margin-bottom: 10rpx; }
+.behavior-item { margin-top: 24rpx; }
+.behavior-row { display: flex; justify-content: space-between; font-size: 26rpx; font-weight: 700; margin-bottom: 10rpx; }
 .progress-track {
-  height: 22rpx;
-  border: 4rpx solid #111;
+  height: 20rpx;
+  border: 4rpx solid #111111;
   border-radius: 999rpx;
-  background: #dfdfdf;
+  background: #DFDFDF;
   overflow: hidden;
+  margin: 0 4rpx;
 }
 .progress-fill { height: 100%; border-radius: 999rpx; }
-.progress-fill.warn { background: #6a6a6a; }
-.progress-fill.hot { background: #b72020; }
+.progress-fill.warn { background: #6A6A6A; }
+.progress-fill.hot { background: #B72020; }
 .progress-fill.good { background: #807000; }
 
 .mood-card { display: flex; align-items: center; justify-content: space-between; }
 .mood-col { flex: 1; }
-.mood-divider { width: 4rpx; height: 100rpx; background: #111; }
-.mood-label { font-size: 32rpx; font-weight: 700; }
-.mood-value { font-size: 56rpx; font-weight: 900; color: #5a4a08; margin-top: 10rpx; }
+.mood-divider { width: 4rpx; height: 90rpx; background: #111111; }
+.mood-label { font-size: 26rpx; font-weight: 700; }
+.mood-value { font-size: 46rpx; font-weight: 900; color: #5a4a08; margin-top: 8rpx; line-height: 1.15; }
 .mood-value.danger { color: #c31717; }
+.mood-subtle { font-size: 24rpx; color: #666666; margin-top: 6rpx; }
 
 .judge-card {
   background: #5d5203;
-  color: #fff;
-  padding: 26rpx;
-  margin-bottom: 28rpx;
+  color: #FFFFFF;
+  padding: 24rpx;
+  margin-bottom: 22rpx;
   text-align: center;
 }
-.judge-title { font-size: 36rpx; font-weight: 800; }
-.judge-result { margin-top: 16rpx; font-size: 54rpx; font-weight: 900; }
+.judge-title { font-size: 34rpx; font-weight: 900; }
+.judge-result { margin-top: 12rpx; font-size: 50rpx; font-weight: 900; line-height: 1.2; }
 
-.actions { margin-top: 14rpx; }
+.actions { margin-top: 18rpx; }
 .action-btn {
   height: 88rpx;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 46rpx;
+  font-size: 30rpx;
   font-weight: 900;
   margin-bottom: 20rpx;
 }
-.action-btn.primary { background: #ffd400; color: #111; }
-.action-btn.secondary { background: #fff; color: #111; }
+.action-btn.primary { background: #FFD400; color: #111111; }
+.action-btn.secondary { background: #FFFFFF; color: #111111; }
