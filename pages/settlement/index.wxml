@@ -1,41 +1,65 @@
-<view class="container">
-  <view class="card result-top">
-    <view class="title">今日打工副本结算</view>
-    <view class="persona">今日打工状态：{{persona}}</view>
-    <view class="subtle">今日一句话结论：{{roast}}</view>
-    <view class="subtle">今日战果：{{battleRewardText}}</view>
-    <view class="persona">今日副本结果：{{result}}</view>
+<view class="container settlement-page">
+  <view class="card dungeon-report">
+    <view class="report-subtitle">副本通关报告</view>
+    <view class="report-title">副本结算</view>
+    <view class="status-pill">✪ {{mainStatusText}} / {{battleRewardText}}</view>
   </view>
 
-  <view class="card">
-    <view class="title">核心数据</view>
-    <view>今日毛收入：{{gross}}</view>
-    <view>钱包伤害：{{expense}}</view>
-    <view>今日回血：{{net}}</view>
+  <view class="card loot-card">
+    <view class="section-head">
+      <view class="section-title">今日战利品</view>
+      <view wx:if="{{workerLevelLabel}}" class="level-tag">{{workerLevelLabel}}</view>
+    </view>
+    <view class="loot-grid">
+      <view class="loot-small gross">
+        <view class="loot-label">毛收入</view>
+        <view class="loot-value">¥{{gross}}</view>
+      </view>
+      <view class="loot-small expense">
+        <view class="loot-label">钱包伤害</view>
+        <view class="loot-value">-¥{{expense}}</view>
+      </view>
+    </view>
+    <view class="loot-net">
+      <view class="loot-label">净回血</view>
+      <view class="loot-net-value">¥{{net}}</view>
+    </view>
   </view>
 
-  <view class="card">
-    <view class="title">行为数据</view>
-    <view>今日工作时长：{{work}}</view>
-    <view>摸鱼时长：{{fish}}</view>
-    <view>开会时长：{{meeting}}</view>
-    <view>加班时长：{{overtime}}</view>
+  <view class="card behavior-card">
+    <view class="section-title">行为分析</view>
+    <view class="behavior-list">
+      <view class="behavior-item" wx:for="{{behaviorStats}}" wx:key="key">
+        <view class="behavior-row">
+          <view class="behavior-label">{{item.label}}</view>
+          <view class="behavior-time">{{item.duration}}</view>
+        </view>
+        <view class="progress-track">
+          <view class="progress-fill {{item.tone}}" style="width: {{item.percent}}%;"></view>
+        </view>
+      </view>
+    </view>
   </view>
 
-  <view class="card">
-    <view class="title">情绪概览</view>
-    <view>摸鱼指数：{{fishIndex}}</view>
-    <view>精神损耗：{{mental}}</view>
-    <view>今日状态：{{persona}}</view>
+  <view class="card mood-card">
+    <view class="mood-col">
+      <view class="mood-label">精神损耗</view>
+      <view class="mood-value danger">{{mental}}%</view>
+    </view>
+    <view class="mood-divider"></view>
+    <view class="mood-col">
+      <view class="mood-label">摸鱼指数</view>
+      <view class="mood-value">{{fishGrade}}</view>
+    </view>
   </view>
 
-  <view class="card">
-    <view class="title">今日点评</view>
-    <view class="subtle">{{roast}}</view>
+  <view class="judge-card">
+    <view class="judge-title">最终判决</view>
+    <view class="judge-result">{{finalResultText}}</view>
   </view>
 
-  <view class="card actions">
-    <button class="btn-primary" bindtap="generatePoster">生成老板可见版海报</button>
-    <button class="btn-secondary" bindtap="restartDay">开启明天副本</button>
+  <view class="actions">
+    <view class="action-btn primary" bindtap="generatePoster">生成老板可见版海报</view>
+    <view class="action-btn secondary" bindtap="restartDay">开启明日副本</view>
   </view>
 </view>
