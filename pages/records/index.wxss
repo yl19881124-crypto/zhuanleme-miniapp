@@ -96,6 +96,9 @@
 .time-name { font-size: 34rpx; color: #1b1b1b; }
 .time-value { font-size: 36rpx; font-weight: 900; color: #111; }
 
+.time-item-zero .time-name { color: #777; }
+.time-item-zero .time-value { color: #666; }
+
 .time-track {
   height: 22rpx;
   border: 4rpx solid #111;
@@ -105,6 +108,10 @@
 }
 
 .time-fill { height: 100%; border-radius: 999rpx; }
+
+.time-item-zero .time-track {
+  background: #f5f5f5;
+}
 
 .roast {
   margin-top: 24rpx;
