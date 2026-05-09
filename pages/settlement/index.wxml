@@ -42,15 +42,15 @@
   </view>
 
   <view class="card mood-card">
-    <view class="mood-col">
+    <view class="mood-col mood-col-left">
       <view class="mood-label">精神损耗</view>
-      <view class="mood-value danger">{{mental}}%</view>
+      <view class="mood-main mood-danger">{{mental}}%</view>
     </view>
     <view class="mood-divider"></view>
     <view class="mood-col mood-col-right">
       <view class="mood-label">摸鱼指数</view>
-      <view class="fish-grade">{{fishGradeLabel}}级</view>
-      <view class="fish-score">{{fishScoreText}}</view>
+      <view class="mood-main fish-grade">{{fishGradeDisplay}}</view>
+      <view class="mood-sub">{{fishScoreText}}</view>
     </view>
   </view>
 
