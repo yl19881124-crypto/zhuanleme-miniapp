@@ -134,3 +134,7 @@
 .danger-text { font-size: 34rpx; font-weight: 800; color: #111; }
 .danger-red { color: #9d1414; }
 .arrow { font-size: 44rpx; font-weight: 700; line-height: 1; }
+
+.time-picker-field {
+  justify-content: flex-start;
+}
