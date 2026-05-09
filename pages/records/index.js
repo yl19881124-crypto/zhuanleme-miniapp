@@ -21,7 +21,13 @@ function getFishIndexDesc(fishIndex) {
 
 Page({
   data: { tab: 'status', statusSummary: [], fishIndex: 0, fishDesc: '今日很老实。', mental: 0, expenses: [], summaryText: '今天公司买到了你的时间，但没完全买到效率。' },
-  onShow() { this.stopRefresh(); this.refresh(); this.timer = setInterval(() => this.refresh(), 1000); },
+  onShow() {
+    this.stopRefresh();
+    this.refresh();
+    this.timer = setInterval(() => this.refresh(), 1000);
+    const tabBar = this.getTabBar && this.getTabBar();
+    if (tabBar && tabBar.updateSelected) tabBar.updateSelected();
+  },
   onHide() { this.stopRefresh(); },
   onUnload() { this.stopRefresh(); },
   stopRefresh() { if (this.timer) clearInterval(this.timer); this.timer = null; },

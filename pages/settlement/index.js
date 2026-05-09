@@ -22,7 +22,13 @@ Page({
     workerLevelLabel: '',
     behaviorStats: []
   },
-  onShow() { this.stopRefresh(); this.refresh(); this.timer = setInterval(() => this.refresh(), 1000); },
+  onShow() {
+    this.stopRefresh();
+    this.refresh();
+    this.timer = setInterval(() => this.refresh(), 1000);
+    const tabBar = this.getTabBar && this.getTabBar();
+    if (tabBar && tabBar.updateSelected) tabBar.updateSelected();
+  },
   onHide() { this.stopRefresh(); },
   onUnload() { this.stopRefresh(); },
   stopRefresh() { if (this.timer) clearInterval(this.timer); this.timer = null; },
